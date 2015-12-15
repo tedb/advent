@@ -4,8 +4,8 @@
 package advent
 
 import (
-	"regexp"
 	"bufio"
+	"regexp"
 	"strings"
 )
 

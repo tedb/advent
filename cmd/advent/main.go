@@ -39,6 +39,8 @@ func main() {
 		r1, r2 = advent.Advent4_Mining(arg)
 	case "5":
 		r1, r2 = advent.Advent5_Naughty(arg)
+	case "7":
+		r1 = advent.Advent7_Wires(arg)
 	default:
 		println("No cmd found")
 		os.Exit(1)
