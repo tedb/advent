@@ -33,6 +33,8 @@ func main() {
 		r1 = advent.Advent1b_ParensBasement(arg)
 	case "2":
 		r1, r2 = advent.Advent2_Box(arg)
+	case "3":
+	    r1, r2 = advent.Advent3_Houses(arg)
 	default:
 		println("No cmd found")
 		os.Exit(1)
