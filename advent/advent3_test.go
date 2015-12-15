@@ -4,7 +4,6 @@ import (
 	"testing"
 )
 
-
 func TestAdvent3Houses(t *testing.T) {
 	tests := []struct {
 		in  string

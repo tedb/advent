@@ -3,8 +3,7 @@
 // A CLI invocation is at cmd/advent.
 package advent
 
-import (
-)
+import ()
 
 // Advent3_Houses takes a list of ^>v< and returns the number of positions visited
 func Advent3_Houses(s string) (sum1, sum2 int) {
@@ -15,7 +14,7 @@ type RoutePos struct {
 	x, y int
 }
 type Route struct {
-	visited map[RoutePos]struct{}
+	visited                        map[RoutePos]struct{}
 	pos_x1, pos_y1, pos_x2, pos_y2 int
 }
 
@@ -28,17 +27,17 @@ func NewRoute() (r *Route) {
 	return r
 }
 
-// Move Santa around according to ^>v< instructions 
-func (r *Route) Nav(s string) (*Route) {
+// Move Santa around according to ^>v< instructions
+func (r *Route) Nav(s string) *Route {
 	for _, m := range s {
 		switch m {
-			case '^':
+		case '^':
 			r.MoveSanta(0, 1)
-			case '>':
+		case '>':
 			r.MoveSanta(1, 0)
-			case 'v':
+		case 'v':
 			r.MoveSanta(0, -1)
-			case '<':
+		case '<':
 			r.MoveSanta(-1, 0)
 		}
 	}
@@ -46,20 +45,20 @@ func (r *Route) Nav(s string) (*Route) {
 }
 
 // Move Santa and Robo-Santa around according to alternating ^>v< instructions
-func (r *Route) DualNav(s string) (*Route) {
+func (r *Route) DualNav(s string) *Route {
 	for i, m := range s {
 		f := r.MoveSanta
-		if i % 2 != 0 {
+		if i%2 != 0 {
 			f = r.MoveRoboSanta
 		}
 		switch m {
-			case '^':
+		case '^':
 			f(0, 1)
-			case '>':
+		case '>':
 			f(1, 0)
-			case 'v':
+		case 'v':
 			f(0, -1)
-			case '<':
+		case '<':
 			f(-1, 0)
 		}
 	}
@@ -83,4 +82,3 @@ func (r *Route) MoveRoboSanta(d_x, d_y int) {
 func (r *Route) How_many_unique() int {
 	return len(r.visited)
 }
-
