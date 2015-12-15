@@ -37,8 +37,12 @@ func main() {
 		r1, r2 = advent.Advent3_Houses(arg)
 	case "4":
 		r1, r2 = advent.Advent4_Mining(arg)
-	case "5":
+	case "5a":
 		r1, r2 = advent.Advent5_Naughty(arg)
+	case "5b":
+		println(`Use Perl (Go doesn't support regex backreferences)
+perl -ne 'BEGIN {$sum = 0}; $sum++ && print if /(..).*\1/ && /(.).\1/; END {print "$sum\n"}' advent5.txt`)
+		os.Exit(0)
 	case "7":
 		r1 = advent.Advent7_Wires(arg)
 	default:
