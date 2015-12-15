@@ -6,9 +6,9 @@ package advent
 import (
 	"bufio"
 	"fmt"
+	"sort"
 	"strconv"
 	"strings"
-	"sort"
 )
 
 // Advent4_Mining brute forces MD5 hashes to
@@ -48,14 +48,14 @@ func (p *Processor) Run(s string) {
 		switch lex[1] {
 		//123 -> x
 		case "->":
-		source, err := strconv.Atoi(lex[0])
-		// it's a number
-		if err == nil {
-			val = uint16(source)
-		// it's a variable
-		} else {
-			val = p.Reg[lex[0]]
-		}
+			source, err := strconv.Atoi(lex[0])
+			// it's a number
+			if err == nil {
+				val = uint16(source)
+				// it's a variable
+			} else {
+				val = p.Reg[lex[0]]
+			}
 
 		// x AND y -> d
 		case "AND":
