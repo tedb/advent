@@ -15,8 +15,6 @@ func main() {
 	cmd := flag.Arg(0)
 	var arg string
 
-	println(len(*filename))
-
 	if len(*filename) == 0 {
 		arg = flag.Arg(1)
 	} else {
@@ -27,12 +25,14 @@ func main() {
 		arg = string(raw)
 	}
 
-	var r interface{}
+	var r1, r2 interface{}
 	switch cmd {
 	case "1a":
-		r = advent.Advent1a_Parens(arg)
+		r1 = advent.Advent1a_Parens(arg)
 	case "1b":
-		r = advent.Advent1b_ParensBasement(arg)
+		r1 = advent.Advent1b_ParensBasement(arg)
+	case "2":
+		r1, r2 = advent.Advent2_Box(arg)
 	default:
 		println("No cmd found")
 		os.Exit(1)
@@ -41,5 +41,5 @@ func main() {
 	if len(*filename) > 0 {
 		arg = fmt.Sprintf("%.20s...", arg)
 	}
-	fmt.Printf("Advent %s('%s') = %v\n", cmd, arg, r)
+	fmt.Printf("Advent %s('%s') = %v, %v\n", cmd, arg, r1, r2)
 }
