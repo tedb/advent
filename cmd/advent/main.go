@@ -34,9 +34,9 @@ func main() {
 	case "2":
 		r1, r2 = advent.Advent2_Box(arg)
 	case "3":
-	    r1, r2 = advent.Advent3_Houses(arg)
+		r1, r2 = advent.Advent3_Houses(arg)
 	case "4":
-	    r1, r2 = advent.Advent4_Mining(arg)
+		r1, r2 = advent.Advent4_Mining(arg)
 	default:
 		println("No cmd found")
 		os.Exit(1)
