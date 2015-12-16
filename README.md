@@ -25,6 +25,7 @@ At a Linux command prompt:
     $ mkdir tedb-advent && cd tedb-advent
     $ export GOPATH=$PWD
     $ go get github.com/tedb/advent/...
+    $ go test github.com/tedb/advent -v
     $ bin/advent -h
     $ bin/advent -f src/github.com/tedb/advent/data/advent1.txt 1a
     Advent 1a('()()(()()()(()()((()...') = 280, <nil>
