@@ -92,7 +92,8 @@ func (p *Processor) String() (s string) {
 }
 
 func atoi(s string) (i uint16) {
-	i2, _ := strconv.Atoi(s)
+	i2, err := strconv.Atoi(s)
+	check_err(err)
 	i = uint16(i2)
 	return
 }

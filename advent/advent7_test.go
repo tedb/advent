@@ -32,7 +32,11 @@ y: 456`},
 		{"100 -> a\n200 -> b\na OR b -> c", "a: 100\nb: 200\nc: 236"},
 		{"100 -> a\nNOT a -> b", "a: 100\nb: 65435"},
 		{"100 -> a\na -> b", "a: 100\nb: 100"},
+		{"100 -> a\nNOT a -> b\nb RSHIFT 2 -> c", "a: 100\nb: 65435\nc: 16358"},
+		{"100 -> a\nNOT a -> b\nb RSHIFT 2 -> b", "a: 100\nb: 16358"},
 	}
+
+	// helpful site for binary-decimal conversions: https://www.branah.com/ascii-converter
 
 	for i, tt := range tests {
 		r1 := Advent7_Wires(tt.in)
