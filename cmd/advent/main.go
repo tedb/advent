@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
-	"source.developers.google.com/p/ted-cloud/advent"
+	"github.com/tedb/advent"
 )
 
 var filename = flag.String("f", "", "read arg from `filename`")
