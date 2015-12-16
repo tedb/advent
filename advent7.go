@@ -11,12 +11,13 @@ import (
 	"strings"
 )
 
-// Advent4_Mining brute forces MD5 hashes to
+// Advent7_Wires takes a list of instructions, in arbitrary order, and resolves
+// them using a tree
 func Advent7_Wires(s string) (dump string) {
 	p := NewProcessor()
 	scanner := bufio.NewScanner(strings.NewReader(s))
 	for scanner.Scan() {
-		p.Run(scanner.Text())
+		p.AddNodeByString(scanner.Text())
 	}
 
 	err := scanner.Err()
@@ -27,23 +28,55 @@ func Advent7_Wires(s string) (dump string) {
 
 func NewProcessor() *Processor {
 	p := &Processor{}
-	p.Reg = make(map[string]uint16)
+	p.Nodes = make(map[string]uint16)
 	return p
 }
 
-type Processor struct {
-	Reg map[string]uint16
+type Node struct {
+	P *Processor
+	// Function to execute against Lref and Rref to determine Val
+	F func(uint16, uint16) (uint16)
+	// References to other nodes, by name
+	Lref, Rref string
+	// If one of the inputs is a numeric literal, store it here
+	// e.g. for "x LSHIFT 2", Rval would be 2, and Rref nil
+	Lval, Rval uint16
 }
 
-// Take a command in string form and run it
-// assign, AND, OR, LSHIFT, RSHIFT, NOT
-func (p *Processor) Run(s string) {
-	lex := strings.Fields(s)
-	var val uint16
+type Processor struct {
+	Nodes map[string]*Node
+}
 
+// Recursively traverse nodes to determine the value of the given node
+func (n *Node) Value() (v int) {
+	var l, r int
+	if n.Lref != nil {
+		l = P.NodeByKey(n.Lref).Value()
+	} else {
+		l = Lval
+	}
+	
+	if n.Rref != nil {
+		r = P.NodeByKey(n.Rref).Value()
+	} else {
+		r = Rval
+	}
+	
+	return F(l, r)
+}
+
+func (p *Processor) ValueForNode(k string) (v int) {
+	return p.Nodes[k].Value()
+}
+
+func (p *Processor) AddNodeByString(s string) {
+	n := &Node{p}
+	lex := strings.Fields(s)
+	key := lex[len(lex)-1]
+	
 	// NOT x -> h
 	if lex[0] == "NOT" {
-		val = ^p.Reg[lex[1]]
+		n.F = func(l, r int) (x int) { return ^r }
 	} else {
 		switch lex[1] {
 		//123 -> x
@@ -77,15 +110,18 @@ func (p *Processor) Run(s string) {
 			panic("bad lex")
 		}
 	}
+	
+	p.Nodes[key] = n
+}
 
-	key := lex[len(lex)-1]
-	p.Reg[key] = val
+func (p *Processor) NodeByKey(s string) (n *Node) {
+	return p.Nodes[k]
 }
 
 func (p *Processor) String() (s string) {
 	lines := []string{}
-	for key, value := range p.Reg {
-		lines = append(lines, fmt.Sprintf("%s: %d", key, value))
+	for key, node := range p.Nodes {
+		lines = append(lines, fmt.Sprintf("%s: %d", key, node.Value()))
 	}
 	sort.Strings(lines)
 	return strings.Join(lines, "\n")
@@ -96,4 +132,15 @@ func atoi(s string) (i uint16) {
 	check_err(err)
 	i = uint16(i2)
 	return
+}
+
+func str_or_int(raw string) (is_int bool, s string, i uint16) {
+			raw_int, err := strconv.Atoi(raw)
+			if err == nil {
+				// it's a number
+				return true, uint16(raw_int), nil
+			} else {
+				// or, it's a variable
+				return false, 0, raw
+			}
 }

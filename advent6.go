@@ -4,10 +4,12 @@
 package advent
 
 import (
+	"bufio"
+	"strings"
 )
 
 // Advent6_Lights does...
-func Advent6_Lights(s string) (a, b int) {
+func Advent6_Lights(s string) (count, b int) {
 	scanner := bufio.NewScanner(strings.NewReader(s))
 	for scanner.Scan() {
 		count += LightsExec(scanner.Text())
@@ -23,7 +25,7 @@ type LightGrid struct {
 	Grid [1000][1000]bool
 }
 
-func NewLightGrid() (g *LightGrid) 
+func NewLightGrid() (g *LightGrid) {
 	g = &LightGrid{}
 	return
 }
