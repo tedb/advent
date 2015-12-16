@@ -4,10 +4,12 @@
 package advent
 
 import (
+	"bufio"
+	"strings"
 )
 
 // AdventX_Foo does...
-func AdventX_Foo(s string) (a, b int) {
+func AdventX_Foo(s string) (count, b int) {
 	scanner := bufio.NewScanner(strings.NewReader(s))
 	for scanner.Scan() {
 		count += Foo(scanner.Text())
