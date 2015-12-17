@@ -28,14 +28,18 @@ func Advent7_Wires(s string) (dump string) {
 
 func NewProcessor() *Processor {
 	p := &Processor{}
-	p.Nodes = make(map[string]uint16)
+	p.Nodes = make(map[string]*Node)
 	return p
 }
 
 type Node struct {
 	P *Processor
+	// Value previously calculated
+	cacheval uint16
 	// Function to execute against Lref and Rref to determine Val
-	F func(uint16, uint16) (uint16)
+	F func(uint16, uint16) uint16
+	// just for printability
+	Op, Original string
 	// References to other nodes, by name
 	Lref, Rref string
 	// If one of the inputs is a numeric literal, store it here
@@ -43,85 +47,109 @@ type Node struct {
 	Lval, Rval uint16
 }
 
+// Recursively traverse nodes to determine the value of the given node
+func (n *Node) Value(depth int) (v uint16) {
+	if depth > 100 {
+		fmt.Println("Too deep for", n)
+		return
+	}
+	if n.cacheval != 0 {
+		return n.cacheval
+	}
+	fmt.Printf("(%d) %s\n", depth, n)
+	var l, r uint16
+	if n.Lref != "" {
+		fmt.Println(n.Op, "finding value for l =", n.Lref)
+		l = n.P.NodeByKey(n.Lref).Value(depth + 1)
+	} else {
+		fmt.Println(n.Op, "using Lval", n.Lval)
+		l = n.Lval
+	}
+
+	if n.Rref != "" {
+		fmt.Println(n.Op, "finding value for r =", n.Rref)
+		r = n.P.NodeByKey(n.Rref).Value(depth + 1)
+	} else {
+		fmt.Println(n.Op, "using Rval", n.Rval)
+		r = n.Rval
+	}
+
+	n.cacheval = n.F(l, r)
+	return n.cacheval
+}
+
+func (n *Node) String() (s string) {
+	return fmt.Sprintf("\"%s\" ==> %s/%d %s %s/%d", n.Original, n.Lref, n.Lval, n.Op, n.Rref, n.Rval)
+}
+
 type Processor struct {
 	Nodes map[string]*Node
 }
 
-// Recursively traverse nodes to determine the value of the given node
-func (n *Node) Value() (v int) {
-	var l, r int
-	if n.Lref != nil {
-		l = P.NodeByKey(n.Lref).Value()
-	} else {
-		l = Lval
-	}
-	
-	if n.Rref != nil {
-		r = P.NodeByKey(n.Rref).Value()
-	} else {
-		r = Rval
-	}
-	
-	return F(l, r)
-}
-
-func (p *Processor) ValueForNode(k string) (v int) {
-	return p.Nodes[k].Value()
+func (p *Processor) ValueForNode(k string) (v uint16) {
+	return p.Nodes[k].Value(0)
 }
 
 func (p *Processor) AddNodeByString(s string) {
-	n := &Node{p}
+	n := &Node{P: p, Original: s}
 	lex := strings.Fields(s)
 	key := lex[len(lex)-1]
-	
+
 	// NOT x -> h
 	if lex[0] == "NOT" {
-		n.F = func(l, r int) (x int) { return ^r }
+		n.Op = lex[0]
+		n.F = func(l, r uint16) (x uint16) { return ^r }
+		n.Rref, n.Rval = str_or_int(lex[1])
 	} else {
+		n.Op = lex[1]
+
 		switch lex[1] {
+
 		//123 -> x
 		case "->":
-			source, err := strconv.Atoi(lex[0])
-			// it's a number
-			if err == nil {
-				val = uint16(source)
-				// it's a variable
-			} else {
-				val = p.Reg[lex[0]]
-			}
+			n.F = func(l, r uint16) (x uint16) { return l }
+			n.Lref, n.Lval = str_or_int(lex[0])
 
 		// x AND y -> d
 		case "AND":
-			val = p.Reg[lex[0]] & p.Reg[lex[2]]
+			n.F = func(l, r uint16) (x uint16) { return l & r }
+			n.Lref, n.Lval = str_or_int(lex[0])
+			n.Rref, n.Rval = str_or_int(lex[2])
 
 		// x OR y -> e
 		case "OR":
-			val = p.Reg[lex[0]] | p.Reg[lex[2]]
+			n.F = func(l, r uint16) (x uint16) { return l | r }
+			n.Lref, n.Lval = str_or_int(lex[0])
+			n.Rref, n.Rval = str_or_int(lex[2])
 
 		// x LSHIFT 2 -> f
 		case "LSHIFT":
-			val = p.Reg[lex[0]] << atoi(lex[2])
+			n.F = func(l, r uint16) (x uint16) { return l << r }
+			n.Lref, n.Lval = str_or_int(lex[0])
+			n.Rref, n.Rval = str_or_int(lex[2])
 
 		// y RSHIFT 2 -> g
 		case "RSHIFT":
-			val = p.Reg[lex[0]] >> atoi(lex[2])
+			n.F = func(l, r uint16) (x uint16) { return l >> r }
+			n.Lref, n.Lval = str_or_int(lex[0])
+			n.Rref, n.Rval = str_or_int(lex[2])
 
 		default:
 			panic("bad lex")
 		}
 	}
-	
+
 	p.Nodes[key] = n
 }
 
 func (p *Processor) NodeByKey(s string) (n *Node) {
-	return p.Nodes[k]
+	return p.Nodes[s]
 }
 
 func (p *Processor) String() (s string) {
 	lines := []string{}
 	for key, node := range p.Nodes {
-		lines = append(lines, fmt.Sprintf("%s: %d", key, node.Value()))
+		lines = append(lines, fmt.Sprintf("%s: %d", key, node.Value(0)))
 	}
 	sort.Strings(lines)
 	return strings.Join(lines, "\n")
@@ -134,13 +162,13 @@ func atoi(s string) (i uint16) {
 	return
 }
 
-func str_or_int(raw string) (is_int bool, s string, i uint16) {
-			raw_int, err := strconv.Atoi(raw)
-			if err == nil {
-				// it's a number
-				return true, uint16(raw_int), nil
-			} else {
-				// or, it's a variable
-				return false, 0, raw
-			}
+func str_or_int(raw string) (s string, i uint16) {
+	raw_int, err := strconv.Atoi(raw)
+	if err == nil {
+		// it's a number
+		return "", uint16(raw_int)
+	} else {
+		// or, it's a variable
+		return raw, 0
+	}
 }
