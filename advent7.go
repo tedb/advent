@@ -26,6 +26,21 @@ func Advent7_Wires(s string) (dump string) {
 	return p.String()
 }
 
+func Advent7b_Wires(s string) (dump string) {
+	p := NewProcessor()
+	scanner := bufio.NewScanner(strings.NewReader(s))
+	for scanner.Scan() {
+		p.AddNodeByString(scanner.Text())
+	}
+
+	err := scanner.Err()
+	check_err(err)
+	
+	p.AddNodeByString("956 -> b")
+
+	return p.String()
+}
+
 func NewProcessor() *Processor {
 	p := &Processor{}
 	p.Nodes = make(map[string]*Node)
