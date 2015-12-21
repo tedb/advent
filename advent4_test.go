@@ -16,7 +16,7 @@ func TestAdvent4Mining(t *testing.T) {
 	}
 
 	for i, tt := range tests {
-		r1, r2 := Advent4Mining(tt.in)
+		r1, r2 := Advent04Mining(tt.in)
 		if r1 != tt.out1 || r2 != tt.out2 {
 			t.Errorf("Test %d: Advent4_Mining(%q) => %d, %d, want %d, %d", i, tt.in, r1, r2, tt.out1, tt.out2)
 		}

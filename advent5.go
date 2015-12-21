@@ -1,6 +1,3 @@
-// Package advent implements attempts at the exercises found at
-// http://adventofcode.com/.  Unit tests are in advent_test.go.
-// A CLI invocation is at cmd/advent.
 package advent
 
 import (
@@ -9,9 +6,9 @@ import (
 	"strings"
 )
 
-// Advent5Naughty scans over input lines and counts the number of "naughty"
+// Advent05Naughty scans over input lines and counts the number of "naughty"
 // strings according to defined rules
-func Advent5Naughty(s string) (count, z int) {
+func Advent05Naughty(s string) (count, z int) {
 	scanner := bufio.NewScanner(strings.NewReader(s))
 	for scanner.Scan() {
 		count += IsNaughty(scanner.Text())

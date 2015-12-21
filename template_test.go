@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-func TestAdventXFoo(t *testing.T) {
+func TestAdvent99Template(t *testing.T) {
 	tests := []struct {
 		in         string
 		out1, out2 int

@@ -1,10 +1,7 @@
-// Package advent implements attempts at the exercises found at
-// http://adventofcode.com/.  Unit tests are in advent_test.go.
-// A CLI invocation is at cmd/advent.
 package advent
 
-// Advent3Houses takes a list of ^>v< and returns the number of positions visited
-func Advent3Houses(s string) (sum1, sum2 int) {
+// Advent03Houses takes a list of ^>v< and returns the number of positions visited
+func Advent03Houses(s string) (sum1, sum2 int) {
 	return NewRoute().Nav(s).HowManyUnique(), NewRoute().DualNav(s).HowManyUnique()
 }
 

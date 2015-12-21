@@ -1,6 +1,3 @@
-// Package advent implements attempts at the exercises found at
-// http://adventofcode.com/.  Unit tests are in advent_test.go.
-// A CLI invocation is at cmd/advent.
 package advent
 
 import (
@@ -12,9 +9,9 @@ import (
 	//"fmt"
 )
 
-// Advent2Box takes a list of lines like 1x2x3 and returns the sums from
+// Advent02Box takes a list of lines like 1x2x3 and returns the sums from
 // Box.Sqft and Box.Ribbon
-func Advent2Box(s string) (sumSqft, sumRibbon int) {
+func Advent02Box(s string) (sumSqft, sumRibbon int) {
 	scanner := bufio.NewScanner(strings.NewReader(s))
 	for scanner.Scan() {
 		b := NewBox(scanner.Text())

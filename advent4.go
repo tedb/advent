@@ -1,6 +1,3 @@
-// Package advent implements attempts at the exercises found at
-// http://adventofcode.com/.  Unit tests are in advent_test.go.
-// A CLI invocation is at cmd/advent.
 package advent
 
 import (
@@ -9,8 +6,8 @@ import (
 	"strconv"
 )
 
-// Advent4Mining brute forces MD5 hashes to
-func Advent4Mining(s string) (winner1, winner2 int) {
+// Advent04Mining brute forces MD5 hashes to
+func Advent04Mining(s string) (winner1, winner2 int) {
 	for i := 1; i < 10000000; i++ {
 		//println(i)
 		byte_s := []byte(s)

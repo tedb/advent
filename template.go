@@ -1,6 +1,3 @@
-// Package advent implements attempts at the exercises found at
-// http://adventofcode.com/.  Unit tests are in advent_test.go.
-// A CLI invocation is at cmd/advent.
 package advent
 
 import (
@@ -8,8 +5,8 @@ import (
 	"strings"
 )
 
-// Advent0Foo is a template function for other Advent of Code puzzles to start from
-func Advent0Foo(s string) (count, b int) {
+// Advent99Template is a template function for other Advent of Code puzzles to start from
+func Advent99Template(s string) (count, b int) {
 	scanner := bufio.NewScanner(strings.NewReader(s))
 	for scanner.Scan() {
 		count += Foo(scanner.Text())
@@ -21,7 +18,7 @@ func Advent0Foo(s string) (count, b int) {
 	return
 }
 
-// Foo is a template function to process one line from AdventXFoo
+// Foo is an example and does nothing
 func Foo(s string) int {
 	return 0
 }

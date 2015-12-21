@@ -1,6 +1,3 @@
-// Package advent implements attempts at the exercises found at
-// http://adventofcode.com/.  Unit tests are in advent_test.go.
-// A CLI invocation is at cmd/advent.
 package advent
 
 import (
@@ -8,10 +5,10 @@ import (
 	"strings"
 )
 
-// Advent6Lights scans lines of input and follows instructions
+// Advent06Lights (NOT DONE) scans lines of input and follows instructions
 // to toggle lights in a matrix (toggle, on, off) according to specified
 // rectangles
-func Advent6Lights(s string) (count, b int) {
+func Advent06Lights(s string) (count, b int) {
 	scanner := bufio.NewScanner(strings.NewReader(s))
 	for scanner.Scan() {
 		count += LightsExec(scanner.Text())

@@ -1,6 +1,3 @@
-// Package advent implements attempts at the exercises found at
-// http://adventofcode.com/.  Unit tests are in advent_test.go.
-// A CLI invocation is at cmd/advent.
 package advent
 
 import (
@@ -8,7 +5,7 @@ import (
 	"strings"
 )
 
-// Advent17Eggnog is a template function for other Advent of Code puzzles to start from
+// Advent17Eggnog (NOT DONE) is a template function for other Advent of Code puzzles to start from
 func Advent17Eggnog(s string) (count, b int) {
 	scanner := bufio.NewScanner(strings.NewReader(s))
 	for scanner.Scan() {

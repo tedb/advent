@@ -39,7 +39,7 @@ y: 456`},
 	// helpful site for binary-decimal conversions: https://www.branah.com/ascii-converter
 
 	for i, tt := range tests {
-		r1 := Advent7Wires(tt.in)
+		r1 := Advent07Wires(tt.in)
 		if r1 != tt.out {
 			t.Errorf("Test %d: Advent7_Wires(%q) =>\n%s\n- want -\n%s\n", i, tt.in, r1, tt.out)
 

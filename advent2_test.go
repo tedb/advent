@@ -83,7 +83,7 @@ func TestAdvent2(t *testing.T) {
 	}
 
 	for i, tt := range tests {
-		r1, r2 := Advent2Box(tt.in)
+		r1, r2 := Advent02Box(tt.in)
 		if r1 != tt.out1 || r2 != tt.out2 {
 			t.Errorf("Test %d: Advent2_Box(%q) => %d, %d, want %d, %d", i, tt.in, r1, r2, tt.out1, tt.out2)
 

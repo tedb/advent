@@ -1,6 +1,3 @@
-// Package advent implements attempts at the exercises found at
-// http://adventofcode.com/.  Unit tests are in advent_test.go.
-// A CLI invocation is at cmd/advent.
 package advent
 
 import (
@@ -11,9 +8,9 @@ import (
 	"strings"
 )
 
-// Advent7Wires takes a list of instructions, in arbitrary order, and resolves
+// Advent07Wires takes a list of instructions, in arbitrary order, and resolves
 // them using a tree
-func Advent7Wires(s string) (dump string) {
+func Advent07Wires(s string) (dump string) {
 	p := NewProcessor()
 	scanner := bufio.NewScanner(strings.NewReader(s))
 	for scanner.Scan() {
