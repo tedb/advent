@@ -1,6 +1,8 @@
 Advent of Code: Solutions
 ========================
 
+[![Build Status](https://travis-ci.org/tedb/advent.svg?branch=master)](https://travis-ci.org/tedb/advent)
+
 [Advent of Code](http://adventofcode.com/) provides daily Christmas-themed
 programming puzzles.  This repository contains my attempts at solutions to those
 puzzles, primarily using the [Go](https://golang.org) programming language.
