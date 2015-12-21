@@ -47,6 +47,9 @@ perl -ne 'BEGIN {$sum = 0}; $sum++ && print if /(..).*\1/ && /(.).\1/; END {prin
 		r1 = advent.Advent7_Wires(arg)
 	case "7b":
 		r1 = advent.Advent7b_Wires(arg)
+	case "12":
+	println(`use shell and Perl:
+egrep -o '[0-9-]+' data/advent12.txt | perl -ne '$sum+=$_; END{print $sum}'`)
 	default:
 		println("No cmd found")
 		os.Exit(1)
