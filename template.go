@@ -8,19 +8,20 @@ import (
 	"strings"
 )
 
-// AdventX_Foo does...
-func AdventX_Foo(s string) (count, b int) {
+// Advent0Foo is a template function for other Advent of Code puzzles to start from
+func Advent0Foo(s string) (count, b int) {
 	scanner := bufio.NewScanner(strings.NewReader(s))
 	for scanner.Scan() {
 		count += Foo(scanner.Text())
 	}
 
 	err := scanner.Err()
-	check_err(err)
+	checkErr(err)
 
 	return
 }
 
+// Foo is a template function to process one line from AdventXFoo
 func Foo(s string) int {
 	return 0
 }

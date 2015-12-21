@@ -9,8 +9,8 @@ import (
 	"strconv"
 )
 
-// Advent4_Mining brute forces MD5 hashes to
-func Advent4_Mining(s string) (winner1, winner2 int) {
+// Advent4Mining brute forces MD5 hashes to
+func Advent4Mining(s string) (winner1, winner2 int) {
 	for i := 1; i < 10000000; i++ {
 		//println(i)
 		byte_s := []byte(s)

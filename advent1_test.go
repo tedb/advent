@@ -21,7 +21,7 @@ func TestAdvent1a(t *testing.T) {
 	}
 
 	for i, tt := range tests {
-		r := Advent1a_Parens(tt.in)
+		r := Advent1aParens(tt.in)
 		if r != tt.out {
 			t.Errorf("Test %d: Advent1a_Parens(%q) => %d, want %d", i, tt.in, r, tt.out)
 
@@ -39,7 +39,7 @@ func TestAdvent1b(t *testing.T) {
 	}
 
 	for i, tt := range tests {
-		r := Advent1b_ParensBasement(tt.in)
+		r := Advent1bParensBasement(tt.in)
 		if r != tt.out {
 			t.Errorf("Test %d: Advent1b_ParensBasement(%q) => %d, want %d", i, tt.in, r, tt.out)
 

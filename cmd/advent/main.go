@@ -3,9 +3,9 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/tedb/advent"
 	"io/ioutil"
 	"os"
-	"github.com/tedb/advent"
 )
 
 var filename = flag.String("f", "", "read arg from `filename`")
@@ -28,27 +28,27 @@ func main() {
 	var r1, r2 interface{}
 	switch cmd {
 	case "1a":
-		r1 = advent.Advent1a_Parens(arg)
+		r1 = advent.Advent1aParens(arg)
 	case "1b":
-		r1 = advent.Advent1b_ParensBasement(arg)
+		r1 = advent.Advent1bParensBasement(arg)
 	case "2":
-		r1, r2 = advent.Advent2_Box(arg)
+		r1, r2 = advent.Advent2Box(arg)
 	case "3":
-		r1, r2 = advent.Advent3_Houses(arg)
+		r1, r2 = advent.Advent3Houses(arg)
 	case "4":
-		r1, r2 = advent.Advent4_Mining(arg)
+		r1, r2 = advent.Advent4Mining(arg)
 	case "5a":
-		r1, r2 = advent.Advent5_Naughty(arg)
+		r1, r2 = advent.Advent5Naughty(arg)
 	case "5b":
 		println(`Use Perl (Go doesn't support regex backreferences)
 perl -ne 'BEGIN {$sum = 0}; $sum++ && print if /(..).*\1/ && /(.).\1/; END {print "$sum\n"}' advent5.txt`)
 		os.Exit(0)
 	case "7":
-		r1 = advent.Advent7_Wires(arg)
+		r1 = advent.Advent7Wires(arg)
 	case "7b":
-		r1 = advent.Advent7b_Wires(arg)
+		r1 = advent.Advent7bWires(arg)
 	case "12":
-	println(`use shell and Perl:
+		println(`use shell and Perl:
 egrep -o '[0-9-]+' data/advent12.txt | perl -ne '$sum+=$_; END{print $sum}'`)
 	default:
 		println("No cmd found")

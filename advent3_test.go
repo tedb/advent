@@ -15,7 +15,7 @@ func TestAdvent3Houses(t *testing.T) {
 	}
 
 	for i, tt := range tests {
-		r := NewRoute().Nav(tt.in).How_many_unique()
+		r := NewRoute().Nav(tt.in).HowManyUnique()
 		if r != tt.out {
 			t.Errorf("Test %d: NewRoute().Nav(%q).How_many_unique() => %d, want %d", i, tt.in, r, tt.out)
 
@@ -34,7 +34,7 @@ func TestAdvent3HousesRoboSanta(t *testing.T) {
 	}
 
 	for i, tt := range tests {
-		r := NewRoute().DualNav(tt.in).How_many_unique()
+		r := NewRoute().DualNav(tt.in).HowManyUnique()
 		if r != tt.out {
 			t.Errorf("Test %d: NewRoute().DualNav(%q).How_many_unique() => %d, want %d", i, tt.in, r, tt.out)
 

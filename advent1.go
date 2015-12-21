@@ -3,10 +3,8 @@
 // A CLI invocation is at cmd/advent.
 package advent
 
-import ()
-
-// Advent1a_Parens returns the sum of a sequence of +/- in the form of ( and )
-func Advent1a_Parens(s string) (sum int) {
+// Advent1aParens returns the sum of a sequence of +/- in the form of ( and )
+func Advent1aParens(s string) (sum int) {
 	for _, x := range s {
 		if x == '(' {
 			sum++
@@ -17,9 +15,9 @@ func Advent1a_Parens(s string) (sum int) {
 	return
 }
 
-// Advent1b_ParensBasement follows a sequence of +/- in the form of ( and ),
+// Advent1bParensBasement follows a sequence of +/- in the form of ( and ),
 // and returns the position in the sequence when the accumulated value is -1
-func Advent1b_ParensBasement(s string) (pos int) {
+func Advent1bParensBasement(s string) (pos int) {
 	var sum int
 	for i, x := range s {
 		if x == '(' {
