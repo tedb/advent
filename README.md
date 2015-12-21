@@ -2,6 +2,7 @@ Advent of Code: Solutions
 ========================
 
 [![Build Status](https://travis-ci.org/tedb/advent.svg?branch=master)](https://travis-ci.org/tedb/advent)
+[![GoDoc](https://godoc.org/github.com/tedb/advent?status.svg)](https://godoc.org/github.com/tedb/advent)
 
 [Advent of Code](http://adventofcode.com/) provides daily Christmas-themed
 programming puzzles.  This repository contains my attempts at solutions to those
