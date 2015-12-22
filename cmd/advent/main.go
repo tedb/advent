@@ -57,6 +57,8 @@ perl -ne 'BEGIN {$sum = 0}; $sum++ && print if /(..).*\1/ && /(.).\1/; END {prin
 		r1, r2 = advent.Advent13Seating(arg)
 	case "15":
 		r1, r2 = advent.Advent15Ingredients(arg)
+	case "20":
+		r1, r2 = advent.Advent20InfiniteElves(arg)
 	default:
 		println("No cmd found")
 		os.Exit(1)
