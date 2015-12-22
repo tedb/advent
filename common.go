@@ -42,3 +42,20 @@ func Seq(m, n int) (r []int) {
 	}
 	return r
 }
+
+// Multiply multiplies an int slice
+func Multiply(i []int) (product int) {
+	product = 1
+	for _, x := range i {
+		product *= x
+	}
+	return
+}
+
+// Sum adds an int slice
+func Sum(i []int) (sum int) {
+	for _, x := range i {
+		sum += x
+	}
+	return
+}

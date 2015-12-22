@@ -6,7 +6,7 @@ import (
 
 func TestPermutations(t *testing.T) {
 	r := Permutations([]int{2, 4, 6, 8}, 0)
-	t.Logf("%v", r)
+	//t.Logf("%v", r)
 	if len(r) != 24 {
 		t.Errorf("Permutations with 4 elements should return 24 permutations, got %d", len(r))
 	}
@@ -35,4 +35,19 @@ func TestSeq(t *testing.T) {
 		t.Errorf("Seq: last element should be 7, got %d", r[5])
 	}
 
+}
+
+func TestMultiply(t *testing.T) {
+	r := Multiply([]int{2, 3, 4})
+	if r != 24 {
+		t.Errorf("Multiply: should be 24, got %d", r)
+	}
+}
+
+
+func TestSum(t *testing.T) {
+	r := Sum([]int{2, 3, 4})
+	if r != 9 {
+		t.Errorf("Sum: should be 9, got %d", r)
+	}
 }
