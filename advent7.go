@@ -24,7 +24,7 @@ func Advent07Wires(s string) (dump string) {
 }
 
 // Advent7bWires is same as Advent7Wires but defines "b" before execution
-func Advent7bWires(s string) (dump string) {
+func Advent07bWires(s string) (dump string) {
 	p := NewProcessor()
 	scanner := bufio.NewScanner(strings.NewReader(s))
 	for scanner.Scan() {
