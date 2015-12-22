@@ -138,9 +138,10 @@ func (a SeatingArrangement) TotalHappiness() (sum int) {
 	return sum
 }
 
-// Permutations returns a slice of all the permutations of the input slice
-// Inspired by Python code at below URL and heavily rewritten:
-// (Stack Overflow)[http://stackoverflow.com/questions/2710713/algorithm-to-generate-all-possible-permutations-of-a-list]
+// Permutations returns a slice of all the permutations of the input slice.
+// Inspired by Python code at 
+// [Stack Overflow](http://stackoverflow.com/questions/2710713/algorithm-to-generate-all-possible-permutations-of-a-list)
+// and heavily rewritten.
 func Permutations(in []int, low int) (r [][]int) {
 	xs := make([]int, len(in))
 	copy(xs, in)
