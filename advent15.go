@@ -60,7 +60,8 @@ type Cookie []Ingredient
 func (c Cookie) BestCookie(calorieTarget int) (max int) {
 	//var max int
 	//var best Cookie
-
+	var scoreCounter int
+	// this is a super nasty hack... replace with a recursive function?
 	for j := 0; j <= 100; j++ {
 		for k := 0; k <= 100; k++ {
 			//println("j k", j, k)
@@ -98,6 +99,7 @@ func (c Cookie) BestCookie(calorieTarget int) (max int) {
 						c[3].Quantity = m
 					}
 
+					scoreCounter++
 					s := c.Score()
 					if s > max {
 						if calorieTarget != 0 && c.Calories() != 500 {
@@ -113,6 +115,7 @@ func (c Cookie) BestCookie(calorieTarget int) (max int) {
 		}
 	}
 
+	//fmt.Println("It took us", scoreCounter, "tries")
 	return //best
 }
 
