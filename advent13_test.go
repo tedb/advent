@@ -21,7 +21,7 @@ Carol would gain 60 happiness units by sitting next to Bob.
 Carol would gain 55 happiness units by sitting next to David.
 David would gain 46 happiness units by sitting next to Alice.
 David would lose 7 happiness units by sitting next to Bob.
-David would gain 41 happiness units by sitting next to Carol.`, 330, 0},
+David would gain 41 happiness units by sitting next to Carol.`, 330, 286},
 	}
 
 	for i, tt := range tests {
