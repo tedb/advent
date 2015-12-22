@@ -49,6 +49,8 @@ perl -ne 'BEGIN {$sum = 0}; $sum++ && print if /(..).*\1/ && /(.).\1/; END {prin
 		r1 = advent.Advent07bWires(arg)
 	case "9":
 		r1, r2 = advent.Advent09TSP(arg)
+	case "10":
+		r1, r2 = advent.Advent10LookSay(arg)
 	case "12":
 		r1, r2 = advent.Advent12JSON(arg)
 	case "13":
