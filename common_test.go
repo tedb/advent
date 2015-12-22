@@ -44,7 +44,6 @@ func TestMultiply(t *testing.T) {
 	}
 }
 
-
 func TestSum(t *testing.T) {
 	r := Sum([]int{2, 3, 4})
 	if r != 9 {
