@@ -71,21 +71,21 @@ func (n *Node) Value(depth int) (v uint16) {
 	if n.cacheval != 0 {
 		return n.cacheval
 	}
-	fmt.Printf("(%d) %s\n", depth, n)
+	//fmt.Printf("(%d) %s\n", depth, n)
 	var l, r uint16
 	if n.Lref != "" {
-		fmt.Println(n.Op, "finding value for l =", n.Lref)
+		//fmt.Println(n.Op, "finding value for l =", n.Lref)
 		l = n.P.NodeByKey(n.Lref).Value(depth + 1)
 	} else {
-		fmt.Println(n.Op, "using Lval", n.Lval)
+		//fmt.Println(n.Op, "using Lval", n.Lval)
 		l = n.Lval
 	}
 
 	if n.Rref != "" {
-		fmt.Println(n.Op, "finding value for r =", n.Rref)
+		//fmt.Println(n.Op, "finding value for r =", n.Rref)
 		r = n.P.NodeByKey(n.Rref).Value(depth + 1)
 	} else {
-		fmt.Println(n.Op, "using Rval", n.Rval)
+		//fmt.Println(n.Op, "using Rval", n.Rval)
 		r = n.Rval
 	}
 

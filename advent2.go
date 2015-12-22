@@ -81,9 +81,3 @@ func Min3(a, b, c int) int {
 		return c
 	}
 }
-
-func checkErr(err error) {
-	if err != nil {
-		panic(err)
-	}
-}
