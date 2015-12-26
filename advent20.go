@@ -1,39 +1,106 @@
 package advent
 
 import (
+	"github.com/ntns/goitertools/itertools"
+	"github.com/otiai10/primes"
+	"sort"
 	"strconv"
 )
 
 // Advent20InfiniteElves determines the lowest house number of the house
 // to get at least as many presents as the number in the puzzle input
 func Advent20InfiniteElves(presents_s string) (house, b int) {
-	presents, err := strconv.Atoi(presents_s)
+	_, err := strconv.Atoi(presents_s)
 	checkErr(err)
-	houses := make([]int, 10000000)
-
-	for _, i := range Seq(1, len(houses)) {
-		for _, elf := range(Seq(1, len(houses))) {
-			if i % elf == 0 {
-				houses[i] += elf * 10
+	/*
+		// i is both house number and elf number
+		for i := 1; ; i++ {
+			p := PresentsForHouse(i)
+				if i % elf == 0 {
+					houses[i] += elf * 10
+				}
+				if houses[i] >= presents {
+					//println(houses[i], i, presents)
+					return i, 0
+				}
 			}
-			if houses[i] >= presents {
-				//println(houses[i], i, presents)
-				return i, 0
-			}
-		}
-	}
-	//println(houses[0:20])
+		}*/
 	return
 
-	// for elf := 1; ; elf++ {
-	// 			//println("elf", elf)
+}
 
-	// 	for house := elf; house < len(houses); house += elf {
-	// 		if house == elf {
-	// 		println("elf", elf, "house", house)
-	// 		}
-	// 		houses[house] += elf * 10
+// PresentsForHouse returns "sum of divisors" for the given house number, times ten.
+// Divisors (or factors) are calculated by determining h's unique prime factors,
+// then appending 1 and h to the list, rendering all pairwise combinations
+// of the unique factors, then summing those products.  "Sum of divisors"
+// is also [OEIS sequence A000203](http://oeis.org/A000203).  A simpler way to solve this
+// would be just looping through 1..h and checking divisibility, but using more math makes it fun.
+func PresentsForHouse(h int) (p int) {
+	primeFactors64 := primes.Factorize(int64(h)).All()
+	// convert to []int
+	primeFactors := make([]int, 0)
+	for _, pF := range primeFactors64 {
+		primeFactors = append(primeFactors, int(pF))
+	}
 
-	// 	}
-	// }
+	//fmt.Printf("prime factors %d: %v\n", h, primeFactors)
+	primeCombos := [][]int{}
+	// FIXME: is there an axiom for the max number of factors a number can have?
+	for i := 1; i <= len(primeFactors); i++ {
+		c := itertools.Combinations(primeFactors, i)
+		//fmt.Printf("appending combo %v: %v\n", h, c)
+
+		primeCombos = append(primeCombos, c...)
+	}
+
+	//fmt.Printf("primeCombos %d: %v\n", h, primeCombos)
+
+	allFactors := []int{1}
+
+	for _, primeCombo := range primeCombos {
+		allFactors = append(allFactors, MultiplyInts(primeCombo))
+	}
+	allFactors = UniqueInts(allFactors)
+	//fmt.Printf("all factors %d: %v\n", h, allFactors)
+
+	// Presents is the sum of all factors
+	p = SumInts(allFactors)
+
+	// Puzzle wants "sum of divisors" * 10
+	p *= 10
+	return
+}
+
+func SumInts(i []int) (s int) {
+	for _, x := range i {
+		s += x
+	}
+	return
+}
+
+func MultiplyInts(i []int) (s int) {
+	if len(i) == 0 {
+		return 0
+	}
+	s = 1
+	for _, x := range i {
+		s *= x
+	}
+	return
+}
+
+// UniqueInts returns the unique elements of []int
+func UniqueInts(in []int) (out []int) {
+	if len(in) == 0 {
+		return
+	}
+	sort.Ints(in)
+	out = []int{in[0]}
+
+	for i := 1; i < len(in); i++ {
+		if in[i] != in[i-1] {
+			out = append(out, in[i])
+		}
+	}
+	return
 }
