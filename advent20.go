@@ -14,9 +14,61 @@ func Advent20InfiniteElves(presentsStr string) (house, b int) {
 	presents, err := strconv.Atoi(presentsStr)
 	checkErr(err)
 
-	// i is both house number and elf number
-	for i := 1; i < 100000000; i++ {
+	var runningSum int
+	var runningCount int
+	var stopJumping bool
+
+	// i is both house number and elf number.
+	// This is pretty slow (about 1000 houses per second),
+	// so to narrrow the search space, we start counting at 20% short of
+	// the input value.
+	// Could we instead find a prime number > presents,
+	// then start counting from the previous prime number?
+	for i := 1; ; i++ {
 		pH := PresentsForHouse(i)
+
+		runningSum += pH
+		runningCount++
+		runningAvg := runningSum / runningCount
+
+		if i%1000 == 0 {
+			println("so far:", i, pH, runningAvg)
+			runningSum = 0
+			runningCount = 0
+		}
+
+		// we've got a winner!
+		if pH >= presents {
+			return i, 0
+		}
+
+		if !stopJumping && runningAvg > int(float64(presents)*0.6) {
+			stopJumping = true
+			println("stopping jumping at presents=", pH)
+		}
+		// fast forward the loop if we're not close
+		if i > 100 && !stopJumping {
+			//if i > 100 && pH < int(float64(presents) * 0.3) {
+			//i = int(float64(i) * 1.05)
+			i += 1000
+			runningSum = 0
+			runningCount = 0
+
+			println("jumping i to", i, "so far:", pH, runningAvg)
+		}
+	}
+	return
+}
+
+func Advent20InfiniteElvesSlow(presentsStr string) (house, b int) {
+	presents, err := strconv.Atoi(presentsStr)
+	checkErr(err)
+
+	for i := 1; i < 100000000; i++ {
+		pH := PresentsForHouseSlowWithFactorization(i)
+		/*if i % 100 == 0 {
+			println("so far, slow:", i, pH)
+		}*/
 		if pH >= presents {
 			return i, 0
 		}
@@ -30,7 +82,7 @@ func Advent20InfiniteElves(presentsStr string) (house, b int) {
 // of the unique factors, then summing those products.  "Sum of divisors"
 // is also [OEIS sequence A000203](http://oeis.org/A000203).  A simpler way to solve this
 // would be just looping through 1..h and checking divisibility, but using more math makes it fun.
-func PresentsForHouse(h int) (p int) {
+func PresentsForHouseSlowWithFactorization(h int) (p int) {
 	primeFactors64 := primes.Factorize(int64(h)).All()
 	// convert to []int
 	var primeFactors []int
@@ -64,6 +116,15 @@ func PresentsForHouse(h int) (p int) {
 	// Puzzle wants "sum of divisors" * 10
 	p *= 10
 	return
+}
+
+func PresentsForHouse(h int) (p int) {
+	for i := 1; i <= h; i++ {
+		if h%i == 0 {
+			p += i
+		}
+	}
+	return p * 10
 }
 
 // SumInts sums a slice of ints (big sigma)

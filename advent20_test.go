@@ -75,5 +75,78 @@ func TestMultiplySumUniqueInts(t *testing.T) {
 	if x := UniqueInts([]int{1, 0, 1, 0}); !reflect.DeepEqual(x, []int{0, 1}) {
 		t.Errorf("Test UniqueInts(1, 1, 0, 0) => %v, want [0, 1]", x)
 	}
+}
 
+// PresentsForHouse is quite slow for puzzle input (36,000,000); benchmark
+// and collect stats to figure out why
+func BenchmarkPresentsForHouse1k(b *testing.B) {
+	for n := 0; n < b.N; n++ {
+		PresentsForHouse(1000)
+	}
+}
+
+func BenchmarkPresentsForHouseFactorization1k(b *testing.B) {
+	for n := 0; n < b.N; n++ {
+		PresentsForHouseSlowWithFactorization(1000)
+	}
+}
+
+func BenchmarkPresentsForHouse10k(b *testing.B) {
+	for n := 0; n < b.N; n++ {
+		PresentsForHouse(10000)
+	}
+}
+
+func BenchmarkPresentsForHouseFactorization10k(b *testing.B) {
+	for n := 0; n < b.N; n++ {
+		PresentsForHouseSlowWithFactorization(10000)
+	}
+}
+
+func BenchmarkPresentsForHouse100k(b *testing.B) {
+	for n := 0; n < b.N; n++ {
+		PresentsForHouse(100000)
+	}
+}
+
+func BenchmarkPresentsForHouseFactorization100k(b *testing.B) {
+	for n := 0; n < b.N; n++ {
+		PresentsForHouseSlowWithFactorization(100000)
+	}
+}
+
+func BenchmarkAdvent20_1k(b *testing.B) {
+	for n := 0; n < b.N; n++ {
+		Advent20InfiniteElves("1000")
+	}
+}
+
+func BenchmarkAdvent20Slow_1k(b *testing.B) {
+	for n := 0; n < b.N; n++ {
+		Advent20InfiniteElvesSlow("1000")
+	}
+}
+
+func BenchmarkAdvent20_10k(b *testing.B) {
+	for n := 0; n < b.N; n++ {
+		Advent20InfiniteElves("10000")
+	}
+}
+
+func BenchmarkAdvent20Slow_10k(b *testing.B) {
+	for n := 0; n < b.N; n++ {
+		Advent20InfiniteElvesSlow("10000")
+	}
+}
+
+func BenchmarkAdvent20_100k(b *testing.B) {
+	for n := 0; n < b.N; n++ {
+		Advent20InfiniteElves("100000")
+	}
+}
+
+func BenchmarkAdvent20Slow_100k(b *testing.B) {
+	for n := 0; n < b.N; n++ {
+		Advent20InfiniteElvesSlow("100000")
+	}
 }
