@@ -8,9 +8,38 @@ import (
 )
 
 // Advent20InfiniteElves determines the lowest house number of the house
-// to get at least as many presents as the number in the puzzle input, using
-// Sum of Divisors algorithm
-func Advent20InfiniteElves(presentsStr string) (house, b int) {
+// to get at least as many presents as the number in the puzzle input.
+// Tried using Sum of Divisors algorithm, and was successful, but it
+// was super slow.  Trying brute force algorithm.
+func Advent20InfiniteElves(presentsStr string) (house1, house2 int) {
+	presents, err := strconv.Atoi(presentsStr)
+	checkErr(err)
+
+	houses := make([]int, presents/10)
+
+	for elf := 1; ; elf++ {
+		if elf%100 == 0 {
+			println("done with elf", elf)
+		}
+		for houseIdx := elf; houseIdx < len(houses); houseIdx += elf {
+			houses[houseIdx] += elf * 10
+			//fmt.Println("delivering for elf", elf, "to house", houseIdx, "=", houses[houseIdx])
+		}
+
+		for i, v := range houses {
+			if v >= presents && elf >= i {
+				//fmt.Printf("winning houses(%d): i=%d, v=%d, elf=%d %v\n", presents, i, v, elf, houses[1:])
+				return i, 0
+			}
+		}
+	}
+	return
+}
+
+// Advent20InfiniteElves determines the lowest house number of the house
+// to get at least as many presents as the number in the puzzle input.
+// This version uses Sum of Divisors algorithm.
+func Advent20InfiniteElvesFactors(presentsStr string) (house, b int) {
 	presents, err := strconv.Atoi(presentsStr)
 	checkErr(err)
 
