@@ -10,8 +10,8 @@ func TestAdvent20InfiniteElves(t *testing.T) {
 		in         string
 		out1, out2 int
 	}{
-		{"80", 6, 0},
-		{"130", 8, 0},
+		{"82", 6, 6},
+		{"133", 8, 8},
 	}
 
 	for i, tt := range tests {

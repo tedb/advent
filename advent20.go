@@ -15,21 +15,35 @@ func Advent20InfiniteElves(presentsStr string) (house1, house2 int) {
 	presents, err := strconv.Atoi(presentsStr)
 	checkErr(err)
 
-	houses := make([]int, presents/10)
+	houses1 := make([]int, presents/10)
+	houses2 := make([]int, 50+1)
+	houses2Done := 0
 
 	for elf := 1; ; elf++ {
 		if elf%100 == 0 {
 			println("done with elf", elf)
 		}
-		for houseIdx := elf; houseIdx < len(houses); houseIdx += elf {
-			houses[houseIdx] += elf * 10
+		for houseIdx := elf; houseIdx < len(houses1); houseIdx += elf {
+			houses1[houseIdx] += elf * 10
 			//fmt.Println("delivering for elf", elf, "to house", houseIdx, "=", houses[houseIdx])
 		}
 
-		for i, v := range houses {
-			if v >= presents && elf >= i {
+		for i, v := range houses1 {
+			if v >= presents && elf >= i && houses2Done != 0 {
 				//fmt.Printf("winning houses(%d): i=%d, v=%d, elf=%d %v\n", presents, i, v, elf, houses[1:])
-				return i, 0
+				return i, houses2Done
+			}
+		}
+
+		for houseIdx := elf; houseIdx < len(houses2); houseIdx += elf {
+			houses2[houseIdx] += elf * 11
+		}
+
+		for i, v := range houses2 {
+			if v >= presents && elf >= i && elf >= len(houses2) {
+				//fmt.Printf("winning houses(%d): i=%d, v=%d, elf=%d %v\n", presents, i, v, elf, houses[1:])
+				houses2Done = i
+				break
 			}
 		}
 	}
