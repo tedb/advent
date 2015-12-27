@@ -63,7 +63,14 @@ func Advent20InfiniteElves(presentsStr string) (house1, house2 int) {
 		}(mainElf)
 	}
 	wg.Wait()
-	return <-c1, <-c2
+
+	var ret1, ret2 int
+	select {
+	case ret1 = <-c1:
+	case ret2 = <-c2:
+	}
+
+	return ret1, ret2
 }
 
 // Advent20InfiniteElves determines the lowest house number of the house
