@@ -26,7 +26,7 @@ func Advent20InfiniteElves(presentsStr string) (house1, house2 int) {
 	c2 := make(chan int, 1)
 
 	for mainElf := 1; mainElf < len(houses1); mainElf++ {
-		wg.Add(1)
+		wg.Add(2)
 		go func(elf int) {
 			defer wg.Done()
 			if elf%100 == 0 {
@@ -41,9 +41,13 @@ func Advent20InfiniteElves(presentsStr string) (house1, house2 int) {
 				if v >= presents && elf >= i && houses2Done != 0 {
 					//fmt.Printf("winning houses(%d): i=%d, v=%d, elf=%d %v\n", presents, i, v, elf, houses[1:])
 					c1 <- i
-					break
+					return
 				}
 			}
+		}(mainElf)
+
+		go func(elf int) {
+			defer wg.Done()
 
 			for houseIdx := elf; houseIdx < len(houses2); houseIdx += elf {
 				houses2[houseIdx] += elf * 11
@@ -53,7 +57,7 @@ func Advent20InfiniteElves(presentsStr string) (house1, house2 int) {
 				if v >= presents && elf >= i && elf >= len(houses2) {
 					//fmt.Printf("winning houses(%d): i=%d, v=%d, elf=%d %v\n", presents, i, v, elf, houses[1:])
 					c2 <- i
-					break
+					return
 				}
 			}
 		}(mainElf)
