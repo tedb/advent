@@ -8,25 +8,20 @@ import (
 )
 
 // Advent20InfiniteElves determines the lowest house number of the house
-// to get at least as many presents as the number in the puzzle input
-func Advent20InfiniteElves(presents_s string) (house, b int) {
-	_, err := strconv.Atoi(presents_s)
+// to get at least as many presents as the number in the puzzle input, using
+// Sum of Divisors algorithm
+func Advent20InfiniteElves(presentsStr string) (house, b int) {
+	presents, err := strconv.Atoi(presentsStr)
 	checkErr(err)
-	/*
-		// i is both house number and elf number
-		for i := 1; ; i++ {
-			p := PresentsForHouse(i)
-				if i % elf == 0 {
-					houses[i] += elf * 10
-				}
-				if houses[i] >= presents {
-					//println(houses[i], i, presents)
-					return i, 0
-				}
-			}
-		}*/
-	return
 
+	// i is both house number and elf number
+	for i := 1; i < 100000000; i++ {
+		pH := PresentsForHouse(i)
+		if pH >= presents {
+			return i, 0
+		}
+	}
+	return
 }
 
 // PresentsForHouse returns "sum of divisors" for the given house number, times ten.
@@ -38,7 +33,7 @@ func Advent20InfiniteElves(presents_s string) (house, b int) {
 func PresentsForHouse(h int) (p int) {
 	primeFactors64 := primes.Factorize(int64(h)).All()
 	// convert to []int
-	primeFactors := make([]int, 0)
+	var primeFactors []int
 	for _, pF := range primeFactors64 {
 		primeFactors = append(primeFactors, int(pF))
 	}
@@ -71,6 +66,7 @@ func PresentsForHouse(h int) (p int) {
 	return
 }
 
+// SumInts sums a slice of ints (big sigma)
 func SumInts(i []int) (s int) {
 	for _, x := range i {
 		s += x
@@ -78,6 +74,7 @@ func SumInts(i []int) (s int) {
 	return
 }
 
+// MultiplyInts returns the product of ints (big pi)
 func MultiplyInts(i []int) (s int) {
 	if len(i) == 0 {
 		return 0
