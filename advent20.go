@@ -22,8 +22,8 @@ func Advent20InfiniteElves(presentsStr string) (house1, house2 int) {
 
 	var wg sync.WaitGroup
 
-	c1 := make(chan int, 0)
-	c2 := make(chan int, 0)
+	c1 := make(chan int, 1)
+	c2 := make(chan int, 1)
 
 	for mainElf := 1; mainElf < len(houses1); mainElf++ {
 		wg.Add(1)
