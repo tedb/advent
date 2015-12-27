@@ -25,7 +25,7 @@ func Advent20InfiniteElves(presentsStr string) (house1, house2 int) {
 	c1 := make(chan int, 0)
 	c2 := make(chan int, 0)
 
-	for mainElf := 1; ; mainElf++ {
+	for mainElf := 1; mainElf < len(houses1); mainElf++ {
 		wg.Add(1)
 		go func(elf int) {
 			defer wg.Done()
