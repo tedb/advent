@@ -10,14 +10,33 @@ func TestAdvent20InfiniteElves(t *testing.T) {
 		in         string
 		out1, out2 int
 	}{
-		{"82", 6, 6},
-		{"133", 8, 8},
+		{"82", 6, 0},
+		{"133", 8, 0},
 	}
 
 	for i, tt := range tests {
-		r1, r2 := Advent20InfiniteElves(tt.in)
+		r1, r2 := Advent20InfiniteElves(tt.in), 0
 		if r1 != tt.out1 || r2 != tt.out2 {
 			t.Errorf("Test %d: Advent20InfiniteElves(%s) => %d, %d, want %d, %d", i, tt.in, r1, r2, tt.out1, tt.out2)
+
+		}
+	}
+}
+
+func TestAdvent20bInfiniteElves(t *testing.T) {
+	tests := []struct {
+		in         string
+		out1, out2 int
+	}{
+		{"76", 4, 0},
+		{"43", 3, 0},
+		{"131", 6, 0},
+	}
+
+	for i, tt := range tests {
+		r1, r2 := Advent20bInfiniteElves(tt.in), 0
+		if r1 != tt.out1 || r2 != tt.out2 {
+			t.Errorf("Test %d: Advent20bInfiniteElves(%s) => %d, %d, want %d, %d", i, tt.in, r1, r2, tt.out1, tt.out2)
 
 		}
 	}

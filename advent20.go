@@ -1,69 +1,89 @@
 package advent
 
 import (
+	"fmt"
 	"github.com/ntns/goitertools/itertools"
 	"github.com/otiai10/primes"
+	"runtime"
 	"sort"
 	"strconv"
+	"sync"
 )
 
 // Advent20InfiniteElves determines the lowest house number of the house
 // to get at least as many presents as the number in the puzzle input.
 // Tried using Sum of Divisors algorithm, and was successful, but it
-// was super slow.  Trying brute force algorithm.
+// was super slow.  Trying brute force algorithm.  FUTURE: Retry
+// with a different implementation of a prime factor based algorithm.  Calculate
+// computational complexity of each approach.
 func Advent20InfiniteElves(presentsStr string) (house1 int) {
 	presents, err := strconv.Atoi(presentsStr)
 	checkErr(err)
 
 	houses1 := make([]int, presents/10)
-	houses2 := make([]int, 50+1)
-	houses2Done := 0
 
 	for elf := 1; ; elf++ {
-			if elf%100 == 0 {
-				println("done with elf", elf)
-			}
-			for houseIdx := elf; houseIdx < len(houses1); houseIdx += elf {
-				houses1[houseIdx] += elf * 10
-				//fmt.Println("delivering for elf", elf, "to house", houseIdx, "=", houses[houseIdx])
-			}
+		if elf%100 == 0 {
+			println("done with elf", elf)
+		}
+		for houseIdx := elf; houseIdx < len(houses1); houseIdx += elf {
+			houses1[houseIdx] += elf * 10
+			//fmt.Println("delivering for elf", elf, "to house", houseIdx, "=", houses[houseIdx])
+		}
 
-			for i, v := range houses1 {
-				if v >= presents && elf >= i && houses2Done != 0 {
-					//fmt.Printf("winning houses(%d): i=%d, v=%d, elf=%d %v\n", presents, i, v, elf, houses[1:])
-					return i
-				}
+		for i, v := range houses1 {
+			if v >= presents && elf >= i {
+				//fmt.Printf("winning houses(%d): i=%d, v=%d, elf=%d %v\n", presents, i, v, elf, houses[1:])
+				return i
 			}
+		}
 	}
-	return
+	//return
 }
 
+// Advent20bInfiniteElves is basically the same as Advent20InfiniteElves,
+// but we use a parallel algorithm and the elves each go to only 50 houses
+// instead of infinite.
 func Advent20bInfiniteElves(presentsStr string) (house2 int) {
 	presents, err := strconv.Atoi(presentsStr)
 	checkErr(err)
 
-	houses2 := make([]int, 50+1)
+	houses2 := make([]int, 1000000)
 
-	for elf := 1; ; elf++ {
-			if elf%100 == 0 {
-				println("done with elf", elf)
-			}
+	var wg sync.WaitGroup
+	elves := make(chan int)
+	for i := 0; i < runtime.NumCPU(); i++ {
+		wg.Add(1)
+		go func(elfC chan int) {
+			defer wg.Done()
+			for elf := range elfC {
+				if elf%1000 == 0 {
+					println("done with elf", elf)
+				}
 
-			for houseIdx := elf; houseIdx < len(houses2); houseIdx += elf {
-				houses2[houseIdx] += elf * 11
-			}
-
-			for i, v := range houses2 {
-				if v >= presents && elf >= i && elf >= len(houses2) {
-					//fmt.Printf("winning houses(%d): i=%d, v=%d, elf=%d %v\n", presents, i, v, elf, houses[1:])
-					return i
+				for houseIdx := elf; houseIdx <= elf*50 && houseIdx < len(houses2); houseIdx += elf {
+					houses2[houseIdx] += elf * 11
 				}
 			}
+		}(elves)
 	}
+
+	for elf := 1; elf <= len(houses2); elf++ {
+		elves <- elf
+	}
+	close(elves)
+	wg.Wait()
+	for i, v := range houses2 {
+		if v >= presents {
+			fmt.Printf("winning houses(%d): i=%d, v=%d\n", presents, i, v)
+			return i
+		}
+	}
+
 	return
 }
 
-// Advent20InfiniteElves determines the lowest house number of the house
+// Advent20InfiniteElvesFactors determines the lowest house number of the house
 // to get at least as many presents as the number in the puzzle input.
 // This version uses Sum of Divisors algorithm.
 func Advent20InfiniteElvesFactors(presentsStr string) (house, b int) {
@@ -113,9 +133,12 @@ func Advent20InfiniteElvesFactors(presentsStr string) (house, b int) {
 			println("jumping i to", i, "so far:", pH, runningAvg)
 		}
 	}
-	return
+	//return
 }
 
+// Advent20InfiniteElvesSlow ended up being a very slow algorithm
+// due to the underlying library's repeated calculation of primes.
+// Would be great if the otiai10 library memoized the prime list.
 func Advent20InfiniteElvesSlow(presentsStr string) (house, b int) {
 	presents, err := strconv.Atoi(presentsStr)
 	checkErr(err)
@@ -138,6 +161,7 @@ func Advent20InfiniteElvesSlow(presentsStr string) (house, b int) {
 // of the unique factors, then summing those products.  "Sum of divisors"
 // is also [OEIS sequence A000203](http://oeis.org/A000203).  A simpler way to solve this
 // would be just looping through 1..h and checking divisibility, but using more math makes it fun.
+// Try alternate factoring algorithm from https://en.wikipedia.org/wiki/Trial_division .
 func PresentsForHouseSlowWithFactorization(h int) (p int) {
 	primeFactors64 := primes.Factorize(int64(h)).All()
 	// convert to []int
