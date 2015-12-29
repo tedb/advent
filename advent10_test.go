@@ -25,6 +25,8 @@ func TestAdvent10LookSay(t *testing.T) {
 	}
 }
 
+// LookSay was originally kind of slow, so I created a benchmark
+// and tweaked the function to reduce # of allocations per run
 func BenchmarkLookSay(b *testing.B) {
 	for n := 0; n < b.N; n++ {
 		LookSay("311311221112131221123113112211322112211213322113")
