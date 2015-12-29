@@ -5,14 +5,13 @@ import (
 	"github.com/otiai10/primes"
 	"sort"
 	"strconv"
-	"sync"
 )
 
 // Advent20InfiniteElves determines the lowest house number of the house
 // to get at least as many presents as the number in the puzzle input.
 // Tried using Sum of Divisors algorithm, and was successful, but it
 // was super slow.  Trying brute force algorithm.
-func Advent20InfiniteElves(presentsStr string) (house1, house2 int) {
+func Advent20InfiniteElves(presentsStr string) (house1 int) {
 	presents, err := strconv.Atoi(presentsStr)
 	checkErr(err)
 
@@ -20,17 +19,9 @@ func Advent20InfiniteElves(presentsStr string) (house1, house2 int) {
 	houses2 := make([]int, 50+1)
 	houses2Done := 0
 
-	var wg sync.WaitGroup
-
-	c1 := make(chan int, 1)
-	c2 := make(chan int, 1)
-
-	for mainElf := 1; mainElf < len(houses1); mainElf++ {
-		wg.Add(2)
-		go func(elf int) {
-			defer wg.Done()
+	for elf := 1; ; elf++ {
 			if elf%100 == 0 {
-				//println("done with elf", elf)
+				println("done with elf", elf)
 			}
 			for houseIdx := elf; houseIdx < len(houses1); houseIdx += elf {
 				houses1[houseIdx] += elf * 10
@@ -40,14 +31,23 @@ func Advent20InfiniteElves(presentsStr string) (house1, house2 int) {
 			for i, v := range houses1 {
 				if v >= presents && elf >= i && houses2Done != 0 {
 					//fmt.Printf("winning houses(%d): i=%d, v=%d, elf=%d %v\n", presents, i, v, elf, houses[1:])
-					c1 <- i
-					return
+					return i
 				}
 			}
-		}(mainElf)
+	}
+	return
+}
 
-		go func(elf int) {
-			defer wg.Done()
+func Advent20bInfiniteElves(presentsStr string) (house2 int) {
+	presents, err := strconv.Atoi(presentsStr)
+	checkErr(err)
+
+	houses2 := make([]int, 50+1)
+
+	for elf := 1; ; elf++ {
+			if elf%100 == 0 {
+				println("done with elf", elf)
+			}
 
 			for houseIdx := elf; houseIdx < len(houses2); houseIdx += elf {
 				houses2[houseIdx] += elf * 11
@@ -56,21 +56,11 @@ func Advent20InfiniteElves(presentsStr string) (house1, house2 int) {
 			for i, v := range houses2 {
 				if v >= presents && elf >= i && elf >= len(houses2) {
 					//fmt.Printf("winning houses(%d): i=%d, v=%d, elf=%d %v\n", presents, i, v, elf, houses[1:])
-					c2 <- i
-					return
+					return i
 				}
 			}
-		}(mainElf)
 	}
-	wg.Wait()
-
-	var ret1, ret2 int
-	select {
-	case ret1 = <-c1:
-	case ret2 = <-c2:
-	}
-
-	return ret1, ret2
+	return
 }
 
 // Advent20InfiniteElves determines the lowest house number of the house

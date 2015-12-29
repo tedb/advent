@@ -43,8 +43,12 @@ func main() {
 		println(`Use Perl (Go doesn't support regex backreferences)
 perl -ne 'BEGIN {$sum = 0}; $sum++ && print if /(..).*\1/ && /(.).\1/; END {print "$sum\n"}' advent5.txt`)
 		os.Exit(0)
+	case "6":
+		r1, r2 = advent.Advent06Lights(arg)
 	case "7":
 		r1 = advent.Advent07Wires(arg)
+	case "8":
+		r1, r2 = advent.Advent08Matchsticks(arg)
 	case "7b":
 		r1 = advent.Advent07bWires(arg)
 	case "9":
@@ -58,7 +62,9 @@ perl -ne 'BEGIN {$sum = 0}; $sum++ && print if /(..).*\1/ && /(.).\1/; END {prin
 	case "15":
 		r1, r2 = advent.Advent15Ingredients(arg)
 	case "20":
-		r1, r2 = advent.Advent20InfiniteElves(arg)
+		r1 = advent.Advent20InfiniteElves(arg)
+	case "20b":
+		r1 = advent.Advent20bInfiniteElves(arg)
 	default:
 		println("No cmd found")
 		os.Exit(1)
