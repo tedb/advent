@@ -65,6 +65,11 @@ perl -ne 'BEGIN {$sum = 0}; $sum++ && print if /(..).*\1/ && /(.).\1/; END {prin
 		r1 = advent.Advent20InfiniteElves(arg)
 	case "20b":
 		r1 = advent.Advent20bInfiniteElves(arg)
+	case "25":
+		println("solution in ruby:")
+		println("offset = (r * (r+1))/2 - (r-1) + r*(c-1) + (c-1)*(c)/2")
+		println("code = (1..offset-1).reduce(20151125) {|acc, n| acc = acc * 252533 % 33554393 }")
+		os.Exit(0)
 	default:
 		println("No cmd found")
 		os.Exit(1)
