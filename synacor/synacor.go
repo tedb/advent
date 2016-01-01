@@ -183,13 +183,14 @@ func (vm *VM) Run() (err error) {
 			i += offset
 			fmt.Println("offset", offset)
 		}
-		// 		if i > 530 {
-		// 			vm.status = "Ended early for safety"
-		// 			break
-		// 		}
+
 		if i == 524 {
-		    println("\n---- cleared register checks ----")
+		    println("\n---- cleared register read checks ----")
 		}
+		if i == 533 {
+		    println("\n---- cleared set register checks ----")
+		}
+		
 	}
 	return nil
 }
