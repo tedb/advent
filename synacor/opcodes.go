@@ -10,10 +10,10 @@ func (vm *VM) opHalt(instr []uint16) int {
 // set: 1 a b
 //   set register <a> to the value of <b>
 func (vm *VM) opSet(instr []uint16) int {
-	a := vm.get(instr[0])
+	a := 32768 - instr[0] 
 	b := vm.get(instr[1])
 	vm.registers[a] = b
-	println("set reg", a, "=", b, ":", vm.registers[a])
+	println("set reg", a, "=", vm.registers[a])
 	return 3
 }
 

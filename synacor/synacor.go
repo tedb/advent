@@ -167,7 +167,7 @@ func (vm *VM) Run() (err error) {
 	for i := 0; i < len(vm.program); {
 		instr := vm.program[i]
 		fn := vm.opcodes[instr]
-		fmt.Printf("\n%s: %v\n", GetFunctionName(fn), vm.program[i:i+4])
+		fmt.Printf("\n%d %s: %v\n", i, GetFunctionName(fn), vm.program[i:i+4])
 		if fn == nil {
 			return errors.New(fmt.Sprintf("bad function: %d", instr))
 		}
@@ -181,12 +181,15 @@ func (vm *VM) Run() (err error) {
 		} else {
 			// non-jump instructions return the number of positions to skip
 			i += offset
-			//fmt.Println("offset", offset, "i=", i)
+			fmt.Println("offset", offset)
 		}
 		// 		if i > 530 {
 		// 			vm.status = "Ended early for safety"
 		// 			break
 		// 		}
+		if i == 524 {
+		    println("\n---- cleared register checks ----")
+		}
 	}
 	return nil
 }
@@ -197,6 +200,7 @@ func (vm *VM) Run() (err error) {
 // - numbers 32776..65535 are invalid
 func (vm *VM) get(n uint16) uint16 {
 	if n <= 32767 {
+	    println("get literal:", n)
 		return n
 	} else if n >= 32768 && n <= 32775 {
 		println("get reg:", n-32768, "=", vm.registers[n-32768])
