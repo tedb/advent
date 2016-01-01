@@ -171,7 +171,7 @@ func (vm *VM) Run() (err error) {
 		if offset == 0 {
 			// program ends on halt or errors from ret or pop
 			break
-		} else if x := instr; x == 6 || x == 7 || x == 8 || x == 17 || x == 18 {
+		} else if x := instr; offset > 3 && (x == 6 || x == 7 || x == 8 || x == 17 || x == 18) {
 			// jump instructions return the exact instruction to run next
 			i = offset
 		} else {
@@ -179,10 +179,10 @@ func (vm *VM) Run() (err error) {
 			i += offset
 			fmt.Println("offset", offset, "i=", i)
 		}
-		if i > 530 {
-			vm.status = "Ended early for safety"
-			break
-		}
+// 		if i > 530 {
+// 			vm.status = "Ended early for safety"
+// 			break
+// 		}
 	}
 	return nil
 }
@@ -214,14 +214,29 @@ func (vm *VM) opGt(instr []uint16) int {
 // jmp: 6 a
 //   jump to <a>
 func (vm *VM) opJmp(instr []uint16) int {
-	return int(vm.getVal(instr[0]))
+	return int(vm.get(instr[0]))
 }
+
+// jt: 7 a b
+// (Jump if True)
+//   if <a> is nonzero, jump to <b>
 func (vm *VM) opJt(instr []uint16) int {
-	return 0
+	if instr[0] != 0 {
+		return int(vm.get(instr[1]))
+	}
+	return 3
 }
+
+// jf: 8 a b
+// (Jump if False)
+//   if <a> is zero, jump to <b>
 func (vm *VM) opJf(instr []uint16) int {
-	return 0
+	if instr[0] == 0 {
+		return int(vm.get(instr[1]))
+	}
+	return 3
 }
+
 func (vm *VM) opAdd(instr []uint16) int {
 	return 0
 }
@@ -256,15 +271,15 @@ func (vm *VM) opRet(instr []uint16) int {
 // out: 19 a
 //   write the character represented by ascii code <a> to the terminal
 func (vm *VM) opOut(instr []uint16) int {
-	b := vm.getVal(instr[0])
+	b := vm.get(instr[0])
 	vm.w.Write([]byte{byte(b)})
 	return 2
 }
 
 // in: 20 a
-//   read a character from the terminal and write its ascii code to <a>; it can be 
-//   assumed that once input starts, it will continue until a newline is encountered; 
-//   this means that you can safely read whole lines from the keyboard and trust that 
+//   read a character from the terminal and write its ascii code to <a>; it can be
+//   assumed that once input starts, it will continue until a newline is encountered;
+//   this means that you can safely read whole lines from the keyboard and trust that
 //   they will be fully read
 func (vm *VM) opIn(instr []uint16) int {
 	return 0
@@ -280,12 +295,12 @@ func (vm *VM) opNoop(instr []uint16) int {
 // - numbers 0..32767 mean a literal value
 // - numbers 32768..32775 instead mean registers 0..7
 // - numbers 32776..65535 are invalid
-func (vm *VM) getVal(n uint16) uint16 {
-    if n <= 32767 {
-        return n
-    } else if n >= 32768 && n <= 32775 {
-        return vm.registers[n]
-    } else {
-        panic("Invalid number")
-    }
+func (vm *VM) get(n uint16) uint16 {
+	if n <= 32767 {
+		return n
+	} else if n >= 32768 && n <= 32775 {
+		return vm.registers[n]
+	} else {
+		panic("Invalid number")
+	}
 }
