@@ -6,6 +6,10 @@ import (
 	"fmt"
 	"io"
 	"os"
+	
+	"runtime"
+	"reflect"
+	"regexp"
 )
 
 func Exec(filename string, r io.Reader, w io.Writer) (err error, status string) {
@@ -163,7 +167,7 @@ func (vm *VM) Run() (err error) {
 	for i := 0; i < len(vm.program); {
 		instr := vm.program[i]
 		fn := vm.opcodes[instr]
-		fmt.Println("%v", vm.program[i:i+4])
+		fmt.Printf("\n%s: %v\n", GetFunctionName(fn), vm.program[i:i+4])
 		if fn == nil {
 			return errors.New(fmt.Sprintf("bad function: %d", instr))
 		}
@@ -177,16 +181,15 @@ func (vm *VM) Run() (err error) {
 		} else {
 			// non-jump instructions return the number of positions to skip
 			i += offset
-			fmt.Println("offset", offset, "i=", i)
+			//fmt.Println("offset", offset, "i=", i)
 		}
-// 		if i > 530 {
-// 			vm.status = "Ended early for safety"
-// 			break
-// 		}
+		// 		if i > 530 {
+		// 			vm.status = "Ended early for safety"
+		// 			break
+		// 		}
 	}
 	return nil
 }
-
 
 // - each number is stored as a 16-bit little-endian pair (low byte, high byte)
 // - numbers 0..32767 mean a literal value
@@ -196,8 +199,15 @@ func (vm *VM) get(n uint16) uint16 {
 	if n <= 32767 {
 		return n
 	} else if n >= 32768 && n <= 32775 {
-		return vm.registers[n]
+		println("get reg:", n-32768, "=", vm.registers[n-32768])
+		return vm.registers[n-32768]
 	} else {
 		panic("Invalid number")
 	}
+}
+
+func GetFunctionName(i interface{}) string {
+    fullName := runtime.FuncForPC(reflect.ValueOf(i).Pointer()).Name()
+    name := regexp.MustCompile("synacor.([a-zA-Z]+)").FindStringSubmatch(fullName)
+    return name[1]
 }

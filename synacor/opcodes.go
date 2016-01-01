@@ -1,6 +1,5 @@
 package synacor
 
-
 // halt: 0
 //   stop execution and terminate the program
 func (vm *VM) opHalt(instr []uint16) int {
@@ -8,8 +7,14 @@ func (vm *VM) opHalt(instr []uint16) int {
 	return 0
 }
 
+// set: 1 a b
+//   set register <a> to the value of <b>
 func (vm *VM) opSet(instr []uint16) int {
-	return 0
+	a := vm.get(instr[0])
+	b := vm.get(instr[1])
+	vm.registers[a] = b
+	println("set reg", a, "=", b, ":", vm.registers[a])
+	return 3
 }
 
 func (vm *VM) opPush(instr []uint16) int {
@@ -28,15 +33,18 @@ func (vm *VM) opGt(instr []uint16) int {
 // jmp: 6 a
 //   jump to <a>
 func (vm *VM) opJmp(instr []uint16) int {
-	return int(vm.get(instr[0]))
+	a := vm.get(instr[0])
+	return int(a)
 }
 
 // jt: 7 a b
 // (Jump if True)
 //   if <a> is nonzero, jump to <b>
 func (vm *VM) opJt(instr []uint16) int {
-	if instr[0] != 0 {
-		return int(vm.get(instr[1]))
+	a := vm.get(instr[0])
+	b := vm.get(instr[1])
+	if a != 0 {
+		return int(b)
 	}
 	return 3
 }
@@ -45,8 +53,10 @@ func (vm *VM) opJt(instr []uint16) int {
 // (Jump if False)
 //   if <a> is zero, jump to <b>
 func (vm *VM) opJf(instr []uint16) int {
-	if instr[0] == 0 {
-		return int(vm.get(instr[1]))
+	a := vm.get(instr[0])
+	b := vm.get(instr[1])
+	if a == 0 {
+		return int(b)
 	}
 	return 3
 }
