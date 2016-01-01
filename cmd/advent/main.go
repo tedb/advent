@@ -61,6 +61,15 @@ perl -ne 'BEGIN {$sum = 0}; $sum++ && print if /(..).*\1/ && /(.).\1/; END {prin
 		r1, r2 = advent.Advent13Seating(arg)
 	case "15":
 		r1, r2 = advent.Advent15Ingredients(arg)
+	case "17a":
+		println("solution in ruby:")
+		println(`list = "1 2 3 4".split.map{|x| x.to_i}`)
+		println("ways = (1..list.length).reduce([]) { |acc, i| acc << list.combination(i) }.map{|e| e.select {|x| x.reduce(:+) == 150}}.flatten(1)")
+		println("puts ways.count")
+	case "17b":
+		println("solution in ruby (17a, plus):")
+		println("groups = ways.group_by{|x|x.length}")
+		println("puts groups[groups.keys.min].length")
 	case "20":
 		r1 = advent.Advent20InfiniteElves(arg)
 	case "20b":
