@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"bufio"
 
 	"reflect"
 	"regexp"
@@ -34,13 +35,16 @@ func Exec(filename string, r io.Reader, w io.Writer) (err error, status string) 
 		return errors.New("program len == 0"), ""
 	}
 
-	vm := NewVM(program, r, w)
+	bufR := bufio.NewReader(r)
+	bufW := bufio.NewWriter(w)
+
+	vm := NewVM(program, bufR, bufW)
 
 	err = vm.Run()
 	return err, vm.status
 }
 
-func NewVM(program []uint16, r io.Reader, w io.Writer) (vm *VM) {
+func NewVM(program []uint16, r *bufio.Reader, w *bufio.Writer) (vm *VM) {
 	vm = &VM{
 		memory:     make([]uint16, 65536),
 		programLen: len(program),
@@ -165,8 +169,8 @@ type VM struct {
 	opcodes map[uint16]func([]uint16) int
 
 	status string
-	r      io.Reader
-	w      io.Writer
+	r      *bufio.Reader
+	w      *bufio.Writer
 }
 
 // Run executes Program against the internal data structures of Memory, Registers,

@@ -213,7 +213,12 @@ func (vm *VM) opRet(instr []uint16) int {
 //   write the character represented by ascii code <a> to the terminal
 func (vm *VM) opOut(instr []uint16) int {
 	b := vm.get(instr[0])
-	vm.w.Write([]byte{byte(b)})
+	_, err := vm.w.Write([]byte{byte(b)})
+	vm.w.Flush()
+	if err != nil {
+		vm.status = err.Error()
+		return 0
+	}
 	return 2
 }
 
@@ -223,7 +228,14 @@ func (vm *VM) opOut(instr []uint16) int {
 //   this means that you can safely read whole lines from the keyboard and trust that
 //   they will be fully read
 func (vm *VM) opIn(instr []uint16) int {
-	return 0
+	a := instr[0] - 32768
+	chr, err := vm.r.ReadByte()
+	if err != nil {
+		vm.status = err.Error()
+		return 0
+	}
+	vm.registers[a] = uint16(chr)
+	return 2
 }
 
 // noop: 21
