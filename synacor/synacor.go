@@ -6,10 +6,10 @@ import (
 	"fmt"
 	"io"
 	"os"
-	
-	"runtime"
+
 	"reflect"
 	"regexp"
+	"runtime"
 )
 
 func Exec(filename string, r io.Reader, w io.Writer) (err error, status string) {
@@ -41,13 +41,17 @@ func Exec(filename string, r io.Reader, w io.Writer) (err error, status string) 
 }
 
 func NewVM(program []uint16, r io.Reader, w io.Writer) (vm *VM) {
-	vm = &VM{program: program,
-		memory: make(map[uint16]uint16),
-		stack:  make([]uint16, 0),
-		status: "Ready",
-		r:      r,
-		w:      w,
+	vm = &VM{
+		memory:     make([]uint16, 65536),
+		programLen: len(program),
+		stack:      make([]uint16, 0),
+		status:     "Ready",
+		r:          r,
+		w:          w,
 	}
+
+	// copy the program into memory
+	copy(vm.memory, program)
 
 	vm.opcodes = map[uint16]func([]uint16) int{
 		// halt: 0
@@ -120,7 +124,9 @@ func NewVM(program []uint16, r io.Reader, w io.Writer) (vm *VM) {
 
 		// call: 17 a
 		//   write the address of the next instruction to the stack and jump to <a>
-		17: vm.opCall,
+		// (opCall uses a different signature and is not invoked via the map)
+		//17: vm.opCall,
+
 		// ret: 18
 		//   remove the top element from the stack and jump to it; empty stack = halt
 		18: vm.opRet,
@@ -142,10 +148,13 @@ func NewVM(program []uint16, r io.Reader, w io.Writer) (vm *VM) {
 }
 
 type VM struct {
-	program []uint16
+	//program []uint16
 
 	// memory with 15-bit address space storing 16-bit values
-	memory map[uint16]uint16
+	// program is loaded into approx. the first half of this
+	memory []uint16
+
+	programLen int
 
 	// eight registers
 	registers [8]uint16
@@ -164,33 +173,53 @@ type VM struct {
 // and Stack, executing a member of Opcodes for each instruction.
 // The opcode functions return the position to jump to
 func (vm *VM) Run() (err error) {
-	for i := 0; i < len(vm.program); {
-		instr := vm.program[i]
-		fn := vm.opcodes[instr]
-		fmt.Printf("\n%d %s: %v\n", i, GetFunctionName(fn), vm.program[i:i+4])
-		if fn == nil {
-			return errors.New(fmt.Sprintf("bad function: %d", instr))
-		}
-		offset := fn(vm.program[i+1:])
-		if offset == 0 {
-			// program ends on halt or errors from ret or pop
-			break
-		} else if x := instr; offset > 3 && (x == 6 || x == 7 || x == 8 || x == 17 || x == 18) {
-			// jump instructions return the exact instruction to run next
-			i = offset
+	// i is basically our "instruction pointer"
+	for i := 0; i < vm.programLen; {
+		instr := vm.memory[i]
+
+		var offset int
+		var fn func([]uint16) int
+		// opCall needs to be invoked differently
+		if instr == 17 {
+			//fmt.Printf("\n%d %s: %v (i=%d)\n", i, "opCall", vm.memory[i:i+4], i)
+			offset = vm.opCall(vm.memory[i+1:], i)
 		} else {
-			// non-jump instructions return the number of positions to skip
-			i += offset
-			fmt.Println("offset", offset)
+			fn = vm.opcodes[instr]
+			//fmt.Printf("\n%d %s: %v\n", i, GetFunctionName(fn), vm.memory[i:i+4])
+			if fn == nil {
+				vm.status = "ERROR"
+				return errors.New(fmt.Sprintf("bad function: %d", instr))
+			}
+			offset = fn(vm.memory[i+1:])
 		}
 
-		if i == 524 {
-		    println("\n---- cleared register read checks ----")
+		if offset == 0 {
+			// program ends on halt or errors from ret or pop
+			if vm.status == "Ready" {
+				vm.status = "Not Implemented: " + GetFunctionName(fn)
+			}
+			break
+		} else if x := instr; offset > 3 && (x == 6 || x == 7 || x == 8 || x == 17 || x == 18) {
+			// jump instructions return the exact instruction pointer to run next,
+			// or on failure, just an incremental offset
+			i = offset
+			//fmt.Println("jump", offset)
+		} else {
+			// instructions other than jump return the number of positions to skip
+			i += offset
+			//fmt.Println("offset", offset)
 		}
-		if i == 533 {
-		    println("\n---- cleared set register checks ----")
-		}
-		
+
+		// if i == 524 {
+		// 	println("\n---- cleared register read checks ----")
+		// }
+		// if i == 536 {
+		// 	println("\n---- cleared set register checks ----")
+		// }
+		// if i == 612 {
+		// 	println("\n---- cleared push/pop ----")
+		// }
+
 	}
 	return nil
 }
@@ -201,18 +230,29 @@ func (vm *VM) Run() (err error) {
 // - numbers 32776..65535 are invalid
 func (vm *VM) get(n uint16) uint16 {
 	if n <= 32767 {
-	    println("get literal:", n)
+		//println("get literal:", n)
 		return n
 	} else if n >= 32768 && n <= 32775 {
-		println("get reg:", n-32768, "=", vm.registers[n-32768])
+		//println("get reg:", n-32768, "=", vm.registers[n-32768])
 		return vm.registers[n-32768]
 	} else {
 		panic("Invalid number")
 	}
 }
 
+func (vm *VM) getAbc(instr []uint16) (a, b, c uint16) {
+	a = instr[0] - 32768
+	b = vm.get(instr[1])
+	c = vm.get(instr[2])
+	return
+}
+
 func GetFunctionName(i interface{}) string {
-    fullName := runtime.FuncForPC(reflect.ValueOf(i).Pointer()).Name()
-    name := regexp.MustCompile("synacor.([a-zA-Z]+)").FindStringSubmatch(fullName)
-    return name[1]
+	fullName := runtime.FuncForPC(reflect.ValueOf(i).Pointer()).Name()
+	name := regexp.MustCompile("synacor.([a-zA-Z]+)").FindStringSubmatch(fullName)
+	if len(name) > 1 {
+		return name[1]
+	} else {
+		return fullName
+	}
 }

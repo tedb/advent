@@ -17,7 +17,7 @@ func main() {
 	out := bufio.NewWriter(&outS)
 	err, status := synacor.Exec(*filename, os.Stdin, out) // os.Stdout
 	if err != nil {
-		panic(err)
+		println("Error:", err.Error())
 	}
 	out.Flush()
 	println(outS.String())
