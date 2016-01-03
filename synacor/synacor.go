@@ -88,9 +88,9 @@ func Exec(program []uint16, r io.Reader, w io.Writer) (status string, err error)
 func NewVM(program []uint16, r *bufio.Reader, w *bufio.Writer) (vm *VM) {
 	vm = &VM{
 		memory:     make([]uint16, 65536),
-		programLen: len(program),
 		stack:      make([]uint16, 0),
 		status:     "Ready",
+		programLen: len(program),
 		r:          r,
 		w:          w,
 	}
@@ -193,19 +193,17 @@ func NewVM(program []uint16, r *bufio.Reader, w *bufio.Writer) (vm *VM) {
 }
 
 type VM struct {
-	//program []uint16
-
 	// memory with 15-bit address space storing 16-bit values
 	// program is loaded into approx. the first half of this
 	memory []uint16
-
-	programLen int
 
 	// eight registers
 	registers [8]uint16
 
 	// an unbounded stack which holds individual 16-bit values
 	stack []uint16
+
+	programLen int
 
 	opcodes map[uint16]func([]uint16) int
 
@@ -216,7 +214,6 @@ type VM struct {
 
 // Run executes Program against the internal data structures of Memory, Registers,
 // and Stack, executing a member of Opcodes for each instruction.
-// The opcode functions return the position to jump to
 func (vm *VM) Run() (err error) {
 	// i is basically our "instruction pointer"
 	for i := 0; i < vm.programLen; {
