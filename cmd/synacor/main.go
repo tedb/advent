@@ -32,3 +32,7 @@ func main() {
 		}
 	}
 }
+
+// SPOILER ALERT
+// Game solved with Ruby:
+//   ruby -e 'puts [2,3,5,7,9].permutation.select {|x| x[0] + x[1] * x[2]**2 + x[3]**3 - x[4] == 399}'
