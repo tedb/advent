@@ -9,15 +9,26 @@ import (
 )
 
 var filename = flag.String("f", "/home/ubuntu/workspace/synacor/challenge.bin", "execute program from `filename`")
+var extract = flag.Bool("s", false, "extract strings from source (opcode 19), like Linux strings utility")
 
 func main() {
 	flag.Parse()
 	
-	err, status := synacor.Exec(*filename, os.Stdin, os.Stdout) // os.Stdout
+	program, err := synacor.Load(*filename)
 	if err != nil {
-		println("Error:", err.Error())
+		panic(err)
 	}
-	//out.Flush()
-	//println(outS.String())
-	println("Ended with status:", status)
+	
+	if ! *extract {
+		status, err := synacor.Exec(program, os.Stdin, os.Stdout)
+		if err != nil {
+			println("Error:", err.Error())
+		}
+		println("Ended with status:", status)
+	} else {
+		l := synacor.ExtractStrings(program)
+		for _, s := range l {
+			println(s)
+		}
+	}
 }

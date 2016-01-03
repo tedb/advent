@@ -1,38 +1,79 @@
 package synacor
 
 import (
+	"bufio"
+	"bytes"
 	"encoding/binary"
 	"errors"
 	"fmt"
 	"io"
 	"os"
-	"bufio"
+	"strings"
 
 	"reflect"
 	"regexp"
 	"runtime"
 )
 
-func Exec(filename string, r io.Reader, w io.Writer) (err error, status string) {
+func Load(filename string) (program []uint16, err error) {
 	f, err := os.Open(filename)
 	if err != nil {
-		return err, ""
+		return nil, err
 	}
 
 	stat, err := f.Stat()
 	if err != nil {
-		return err, ""
+		return nil, err
 	}
 
 	bytes_per_int := int64(2)
-	program := make([]uint16, stat.Size()/bytes_per_int)
+	program = make([]uint16, stat.Size()/bytes_per_int)
 	err = binary.Read(f, binary.LittleEndian, &program)
 	if err != nil {
-		return err, ""
+		return nil, err
 	}
 
+	return program, nil
+}
+
+//search through program for strings, which is 1 or more consequtive instances
+// of opcode 19 (opOut)
+func ExtractStrings(p []uint16) (list []string) {
+	var b bytes.Buffer
+	var c int
+	for i := 0; i < len(p); i++ {
+		op := p[i]
+
+		if op == 19 {
+			// append this char to buffer
+			if r := p[i+1]; r > 127 {
+				b.WriteRune('_')
+			} else {
+				b.WriteRune(rune(r))
+			}
+			c++
+		} else if b.Len() > 0 {
+			//
+			list = append(list, fmt.Sprintf("%d: '%s'", i, strings.TrimSuffix(b.String(), "\n")))
+			b.Reset()
+		}
+
+		// opcodes have variable length
+		if op == 2 || op == 3 || op == 6 || op == 17 || op == 19 || op == 21 {
+			i += 1
+		} else if op == 1 || op == 7 || op == 8 || op == 14 || op == 15 || op == 16 {
+			i += 2
+		} else if op == 4 || op == 5 || (op >= 9 && op <= 13) {
+			i += 3
+		}
+	}
+	list = append(list, fmt.Sprintf("---\n%d chars found", c))
+	return list
+}
+
+func Exec(program []uint16, r io.Reader, w io.Writer) (status string, err error) {
 	if len(program) == 0 {
-		return errors.New("program len == 0"), ""
+		return "ERROR", errors.New("program len == 0")
 	}
 
 	bufR := bufio.NewReader(r)
@@ -41,7 +82,7 @@ func Exec(filename string, r io.Reader, w io.Writer) (err error, status string) 
 	vm := NewVM(program, bufR, bufW)
 
 	err = vm.Run()
-	return err, vm.status
+	return vm.status, err
 }
 
 func NewVM(program []uint16, r *bufio.Reader, w *bufio.Writer) (vm *VM) {
