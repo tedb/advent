@@ -8,29 +8,28 @@ import (
 	//"bufio"
 )
 
-var filename = flag.String("f", "/home/ubuntu/workspace/synacor/challenge.bin", "execute program from `filename`")
-var extract = flag.Bool("s", false, "extract strings from source (opcode 19), like Linux strings utility")
+var filename = flag.String("f", "/home/ubuntu/workspace/src/github.com/tedb/advent/synacor/3rd_party/challenge.bin", "execute program from `filename`")
+
+// todo: change to Integer, IP after which strings are extracted (after encryption)
+var extract = flag.Int("e", -1, "extract strings from source (opcode 19; like Linux 'strings' utility), starting after passing instruction pointer `e` to skip past code self-decryption.  65535 to disable.")
 
 func main() {
 	flag.Parse()
-	
-	program, err := synacor.Load(*filename)
+
+	vm := synacor.NewVM(os.Stdin, os.Stdout)
+	vm.ExtractStringsWhen = *extract
+
+	err := vm.Load(*filename)
 	if err != nil {
 		panic(err)
 	}
-	
-	if ! *extract {
-		status, err := synacor.Exec(program, os.Stdin, os.Stdout)
-		if err != nil {
-			println("Error:", err.Error())
-		}
-		println("Ended with status:", status)
-	} else {
-		l := synacor.ExtractStrings(program)
-		for _, s := range l {
-			println(s)
-		}
+
+	err = vm.Run()
+	if err != nil {
+		println("Error:", err.Error())
 	}
+	println("Ended with status:", vm.Status)
+
 }
 
 // SPOILER ALERT

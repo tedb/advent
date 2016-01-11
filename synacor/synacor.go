@@ -15,88 +15,17 @@ import (
 	"runtime"
 )
 
-func Load(filename string) (program []uint16, err error) {
-	f, err := os.Open(filename)
-	if err != nil {
-		return nil, err
-	}
-
-	stat, err := f.Stat()
-	if err != nil {
-		return nil, err
-	}
-
-	bytes_per_int := int64(2)
-	program = make([]uint16, stat.Size()/bytes_per_int)
-	err = binary.Read(f, binary.LittleEndian, &program)
-	if err != nil {
-		return nil, err
-	}
-
-	return program, nil
-}
-
-//search through program for strings, which is 1 or more consequtive instances
-// of opcode 19 (opOut)
-func ExtractStrings(p []uint16) (list []string) {
-	var b bytes.Buffer
-	var c int
-	for i := 0; i < len(p); i++ {
-		op := p[i]
-
-		if op == 19 {
-			// append this char to buffer
-			if r := p[i+1]; r > 127 {
-				b.WriteRune('_')
-			} else {
-				b.WriteRune(rune(r))
-			}
-			c++
-		} else if b.Len() > 0 {
-			//
-			list = append(list, fmt.Sprintf("%d: '%s'", i, strings.TrimSuffix(b.String(), "\n")))
-			b.Reset()
-		}
-
-		// opcodes have variable length
-		if op == 2 || op == 3 || op == 6 || op == 17 || op == 19 || op == 21 {
-			i += 1
-		} else if op == 1 || op == 7 || op == 8 || op == 14 || op == 15 || op == 16 {
-			i += 2
-		} else if op == 4 || op == 5 || (op >= 9 && op <= 13) {
-			i += 3
-		}
-	}
-	list = append(list, fmt.Sprintf("---\n%d chars found", c))
-	return list
-}
-
-func Exec(program []uint16, r io.Reader, w io.Writer) (status string, err error) {
-	if len(program) == 0 {
-		return "ERROR", errors.New("program len == 0")
-	}
-
-	bufR := bufio.NewReader(r)
-	bufW := bufio.NewWriter(w)
-
-	vm := NewVM(program, bufR, bufW)
-
-	err = vm.Run()
-	return vm.status, err
-}
-
-func NewVM(program []uint16, r *bufio.Reader, w *bufio.Writer) (vm *VM) {
+// NewVM initializes a new VM and defines pointers to functions that implement
+// opcodes.
+func NewVM(r io.Reader, w io.Writer) (vm *VM) {
 	vm = &VM{
-		memory:     make([]uint16, 65536),
-		stack:      make([]uint16, 0),
-		status:     "Ready",
-		programLen: len(program),
-		r:          r,
-		w:          w,
+		Status:             "Ready",
+		ExtractStringsWhen: -1,
+		memory:             make([]uint16, 65536),
+		stack:              make([]uint16, 0),
+		r:                  bufio.NewReader(r),
+		w:                  bufio.NewWriter(w),
 	}
-
-	// copy the program into memory
-	copy(vm.memory, program)
 
 	vm.opcodes = map[uint16]func([]uint16) int{
 		// halt: 0
@@ -192,9 +121,20 @@ func NewVM(program []uint16, r *bufio.Reader, w *bufio.Writer) (vm *VM) {
 	return vm
 }
 
+// VM implements the memory, registers, stack, and opcodes of a Synacor Challenge
+// virtual machine.  https://challenge.synacor.com/
 type VM struct {
-	// memory with 15-bit address space storing 16-bit values
-	// program is loaded into approx. the first half of this
+	// Status is a human readable indicator of the phase of execution
+	// Specific status strings are poorly defined, other than "Ready"
+	Status string
+
+	// ExtractStringsWhen defines the instruction pointer after which
+	// we will call ExtractStrings.  -1 to disable (default)
+	ExtractStringsWhen int
+
+	// memory with 15-bit address space storing 16-bit values.
+	// Program is loaded into approx. the first half of this.
+	// This is a slice but in practice is initialized as length 65,536 (i.e. 128 kb RAM)
 	memory []uint16
 
 	// eight registers
@@ -207,12 +147,80 @@ type VM struct {
 
 	opcodes map[uint16]func([]uint16) int
 
-	status string
-	r      *bufio.Reader
-	w      *bufio.Writer
+	r *bufio.Reader
+	w *bufio.Writer
 }
 
-// Run executes Program against the internal data structures of Memory, Registers,
+func (vm *VM) Load(filename string) (err error) {
+	f, err := os.Open(filename)
+	if err != nil {
+		return err
+	}
+
+	stat, err := f.Stat()
+	if err != nil {
+		return err
+	}
+
+	bytes_per_int := int64(2)
+	program := make([]uint16, stat.Size()/bytes_per_int)
+	err = binary.Read(f, binary.LittleEndian, &program)
+	if err != nil {
+		return err
+	}
+
+	vm.programLen = len(program)
+	if vm.programLen == 0 {
+		return errors.New("program len == 0")
+	}
+
+	// copy the program into memory
+	copy(vm.memory, program)
+
+	return nil
+}
+
+//search through program for strings, which is 1 or more consequtive instances
+// of opcode 19 (opOut)
+// TODO: consider making this search all memory, not sure if necessary
+func (vm *VM) ExtractStrings() (list []string) {
+	var b bytes.Buffer
+	var c int
+	
+	list = append(list, fmt.Sprintf("----\nDumping strings for programLen %d\n----", vm.programLen))
+	
+	for i := 0; i < vm.programLen; i++ {
+		op := vm.memory[i]
+
+		if op == 19 {
+			// append this char to buffer
+			if r := vm.memory[i+1]; r > 127 {
+				b.WriteRune('_')
+			} else {
+				b.WriteRune(rune(r))
+			}
+			c++
+		} else if b.Len() > 0 {
+			//
+			list = append(list, fmt.Sprintf("%d: '%s'", i, strings.TrimSuffix(b.String(), "\n")))
+			b.Reset()
+		}
+
+		// opcodes have variable length
+		if op == 2 || op == 3 || op == 6 || op == 17 || op == 19 || op == 21 {
+			i += 1
+		} else if op == 1 || op == 7 || op == 8 || op == 14 || op == 15 || op == 16 {
+			i += 2
+		} else if op == 4 || op == 5 || (op >= 9 && op <= 13) {
+			i += 3
+		}
+	}
+	list = append(list, fmt.Sprintf("---\n%d chars found", c))
+	return list
+}
+
+// Run executes Program (stored in memory starting at position 0)
+// against the internal data structures of Memory, Registers,
 // and Stack, executing a member of Opcodes for each instruction.
 func (vm *VM) Run() (err error) {
 	// i is basically our "instruction pointer"
@@ -229,7 +237,7 @@ func (vm *VM) Run() (err error) {
 			fn = vm.opcodes[instr]
 			//fmt.Printf("\n%d %s: %v\n", i, GetFunctionName(fn), vm.memory[i:i+4])
 			if fn == nil {
-				vm.status = "ERROR"
+				vm.Status = "ERROR"
 				return errors.New(fmt.Sprintf("bad function: %d", instr))
 			}
 			offset = fn(vm.memory[i+1:])
@@ -237,8 +245,8 @@ func (vm *VM) Run() (err error) {
 
 		if offset == 0 {
 			// program ends on halt or errors from ret or pop
-			if vm.status == "Ready" {
-				vm.status = "Not Implemented: " + GetFunctionName(fn)
+			if vm.Status == "Ready" {
+				vm.Status = "Not Implemented: " + GetFunctionName(fn)
 			}
 			break
 		} else if x := instr; offset > 3 && (x == 6 || x == 7 || x == 8 || x == 17 || x == 18) {
@@ -261,6 +269,16 @@ func (vm *VM) Run() (err error) {
 		// if i == 612 {
 		// 	println("\n---- cleared push/pop ----")
 		// }
+		
+		if vm.ExtractStringsWhen != -1 && i >= vm.ExtractStringsWhen {
+			for _, s := range vm.ExtractStrings() {
+				vm.w.WriteString(s)
+				vm.w.WriteString("\n")
+			}
+			vm.w.Flush()
+
+			break
+		}
 
 	}
 	return nil

@@ -1,0 +1,140 @@
+take tablet
+use tablet
+go doorway
+go north
+go north
+go bridge
+go continue
+go down
+go east
+take empty lantern
+go west
+go west
+go passage
+go ladder
+go west
+go south
+go north
+take can
+use can
+go west
+go ladder
+go darkness
+use lantern
+go continue
+go east
+go continue
+go west
+go west
+go west
+go west
+go east
+go east
+go west
+go west
+go north
+take red coin
+use red coin
+look
+go north
+use red coin
+look
+inv
+use tablet
+use lit lantern
+use lit lantern
+inv
+use lantern
+go north
+go north
+go south
+go north
+go west
+take blue coin
+go east
+use blue coin
+look
+go west
+go east
+go west
+go up
+take shiny coin
+go down
+go east
+use shiny coin
+look
+go north
+go south
+go south
+go north
+go north
+go west
+go easet
+go east
+go west
+go east
+go south
+go south
+go north
+go north
+go west
+go up
+go down
+go east
+go east
+take concave coin
+look
+go west
+go north
+use concave coin
+look
+go north
+go west
+go up
+go down
+go east
+go west
+go up
+go down
+go east
+go east
+go down
+take corroded coin
+go west
+go up
+go west
+use corroded coin
+take red coin
+take blue coin
+take corroded coin
+take shiny coin
+take concave coin
+use blue coin
+use red coin
+use shiny coin
+use concave coin
+use corroded coin
+go north
+take teleporter
+use teleporter
+take business card
+take strange book
+use strange book
+inv
+look
+fix_teleporter
+go outside
+fix_teleporter
+fix teleporter
+go inside
+fix teleporter
+go oinside
+go outside
+go inside
+fix_teleporter
+help
+look bookshelf
+look
+look business card
+use business card
+look strange book

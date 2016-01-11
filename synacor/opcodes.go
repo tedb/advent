@@ -5,7 +5,7 @@ package synacor
 // halt: 0
 //   stop execution and terminate the program
 func (vm *VM) opHalt(instr []uint16) int {
-	vm.status = "Halted"
+	vm.Status = "Halted"
 	return 0
 }
 
@@ -32,7 +32,7 @@ func (vm *VM) opPush(instr []uint16) int {
 func (vm *VM) opPop(instr []uint16) int {
 	if len(vm.stack) == 0 {
 		// error
-		vm.status = "opPop has empty stack!"
+		vm.Status = "opPop has empty stack!"
 		return 0
 	}
 
@@ -196,7 +196,7 @@ func (vm *VM) opCall(instr []uint16, nextI int) int {
 func (vm *VM) opRet(instr []uint16) int {
 	if len(vm.stack) == 0 {
 		// error
-		vm.status = "opRet has empty stack!"
+		vm.Status = "opRet has empty stack!"
 		return 0
 	}
 
@@ -212,11 +212,16 @@ func (vm *VM) opRet(instr []uint16) int {
 // out: 19 a
 //   write the character represented by ascii code <a> to the terminal
 func (vm *VM) opOut(instr []uint16) int {
+	// don't print output if we're going to dump strings
+	// if vm.ExtractStringsWhen != -1 {
+	// 	return 2
+	// }
+	
 	b := vm.get(instr[0])
 	_, err := vm.w.Write([]byte{byte(b)})
 	vm.w.Flush()
 	if err != nil {
-		vm.status = err.Error()
+		vm.Status = err.Error()
 		return 0
 	}
 	return 2
@@ -231,7 +236,7 @@ func (vm *VM) opIn(instr []uint16) int {
 	a := instr[0] - 32768
 	chr, err := vm.r.ReadByte()
 	if err != nil {
-		vm.status = err.Error()
+		vm.Status = err.Error()
 		return 0
 	}
 	vm.registers[a] = uint16(chr)
