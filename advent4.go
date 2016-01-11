@@ -6,15 +6,16 @@ import (
 	"strconv"
 )
 
-// Advent04Mining brute forces MD5 hashes to
+// Advent04Mining brute forces MD5 hashes
 func Advent04Mining(s string) (winner1, winner2 int) {
+	inputPrefix := []byte(s)
+
 	for i := 1; i < 10000000; i++ {
 		//println(i)
-		byte_s := []byte(s)
-		byte_i := []byte(strconv.Itoa(i))
-		cand := append(byte_s, byte_i...)
+		byteTrial := []byte(strconv.Itoa(i))
+		cand := append(inputPrefix, byteTrial...)
 		hex := fmt.Sprintf("%x", md5.Sum(cand))
-		//fmt.Printf("%s, %s, %s, %s = %s\n", s, byte_s, byte_i, cand, hex)
+		//fmt.Printf("%s, %s, %s, %s = %s\n", s, inputPrefix, byteTrial, cand, hex)
 		if winner1 == 0 && hex[0:5] == "00000" {
 			winner1 = i
 		}

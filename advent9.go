@@ -108,6 +108,7 @@ func (r CityRoute) WorstRoute() (best CityRoute) {
 	return best
 }
 
+// CityRoute is a specific ordering of City elements
 type CityRoute []City
 
 // Reorder arranges Route in order of specified indexes

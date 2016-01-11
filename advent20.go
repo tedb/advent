@@ -155,7 +155,8 @@ func Advent20InfiniteElvesSlow(presentsStr string) (house, b int) {
 	return
 }
 
-// PresentsForHouse returns "sum of divisors" for the given house number, times ten.
+// PresentsForHouseSlowWithFactorization returns
+// "sum of divisors" for the given house number, times ten.
 // Divisors (or factors) are calculated by determining h's unique prime factors,
 // then appending 1 and h to the list, rendering all pairwise combinations
 // of the unique factors, then summing those products.  "Sum of divisors"
@@ -198,6 +199,8 @@ func PresentsForHouseSlowWithFactorization(h int) (p int) {
 	return
 }
 
+// PresentsForHouse uses a very brute force algorithm to calculate divisibility,
+// but is much simpler than the prime factorization algorithm above.
 func PresentsForHouse(h int) (p int) {
 	for i := 1; i <= h; i++ {
 		if h%i == 0 {

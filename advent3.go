@@ -15,7 +15,7 @@ type Route struct {
 	// List of positions visited so far
 	visited map[routePos]struct{}
 	// Current positions of Santa and RoboSanta
-	pos_x1, pos_y1, pos_x2, pos_y2 int
+	posX1, posY1, posX2, posY2 int
 }
 
 // NewRoute creates a blank Route, with a visit to 0,0, ready to record movements
@@ -67,17 +67,17 @@ func (r *Route) DualNav(s string) *Route {
 }
 
 // MoveSanta changes position in a delta of x/y direction and records the visit
-func (r *Route) MoveSanta(d_x, d_y int) {
-	r.pos_x1 += d_x
-	r.pos_y1 += d_y
-	r.visited[routePos{r.pos_x1, r.pos_y1}] = struct{}{}
+func (r *Route) MoveSanta(dX, dY int) {
+	r.posX1 += dX
+	r.posY1 += dY
+	r.visited[routePos{r.posX1, r.posY1}] = struct{}{}
 }
 
 // MoveRoboSanta changes position in a delta of x/y direction and records the visit
-func (r *Route) MoveRoboSanta(d_x, d_y int) {
-	r.pos_x2 += d_x
-	r.pos_y2 += d_y
-	r.visited[routePos{r.pos_x2, r.pos_y2}] = struct{}{}
+func (r *Route) MoveRoboSanta(dX, dY int) {
+	r.posX2 += dX
+	r.posY2 += dY
+	r.visited[routePos{r.posX2, r.posY2}] = struct{}{}
 }
 
 // HowManyUnique returns the number of locations visited

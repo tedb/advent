@@ -26,8 +26,19 @@ func Advent15Ingredients(s string) (score1, score2 int) {
 	return
 }
 
+// Ingredient represents the attributes of an ingredient (Capacity, Durability, etc.),
+// which really only makes sense in the context of the puzzle parameters.
+type Ingredient struct {
+	Name                                            string
+	Capacity, Durability, Flavor, Texture, Calories int
+	Quantity                                        int
+}
+
+// Ingredients is a list of Ingredient which can be populated from a string
+// using AddFromString
 type Ingredients []Ingredient
 
+// AddFromString takes a line of puzzle input and populates ingredient quantities from it
 func (i Ingredients) AddFromString(s string) Ingredients {
 	newI := Ingredient{}
 	_, err := fmt.Sscanf(s, "%s capacity %d, durability %d, flavor %d, texture %d, calories %d",
@@ -39,12 +50,7 @@ func (i Ingredients) AddFromString(s string) Ingredients {
 	return i
 }
 
-type Ingredient struct {
-	Name                                            string
-	Capacity, Durability, Flavor, Texture, Calories int
-	Quantity                                        int
-}
-
+// NewCookie creates a new instance of Cookie based on a list of Ingredients
 func (i Ingredients) NewCookie() (c Cookie) {
 	c = make(Cookie, len(i))
 	copy(c, i)
@@ -52,6 +58,7 @@ func (i Ingredients) NewCookie() (c Cookie) {
 	return c
 }
 
+// Cookie is a specific instance of a set of Ingredient elements
 type Cookie []Ingredient
 
 // BestCookie combines its ingredients such that the ingredient quantity sum == 100
@@ -119,6 +126,8 @@ func (c Cookie) BestCookie(calorieTarget int) (max int) {
 	return //best
 }
 
+// Score follows the puzzle algorithm to give the cookie a score,
+// so we can find the "best" cookie
 func (c Cookie) Score() (s int) {
 	var sC, sD, sF, sT int
 
@@ -145,6 +154,7 @@ func (c Cookie) Score() (s int) {
 	return sC * sD * sF * sT
 }
 
+// Calories calculates the cookie's calories based on ingredients' Quantity and Calories
 func (c Cookie) Calories() (s int) {
 	for _, i := range c {
 		s += i.Quantity * i.Calories
