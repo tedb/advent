@@ -74,6 +74,8 @@ perl -ne 'BEGIN {$sum = 0}; $sum++ && print if /(..).*\1/ && /(.).\1/; END {prin
 		println("puts groups[groups.keys.min].length")
 	case "18":
 		r1, r2 = advent.Advent18Animation(arg, 100)
+	case "19":
+		r1 = advent.Advent19DistinctMoleculesFile(arg)
 	case "20":
 		r1 = advent.Advent20InfiniteElves(arg)
 	case "20b":
