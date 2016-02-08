@@ -59,3 +59,17 @@ func Sum(i []int) (sum int) {
 	}
 	return
 }
+
+// UniqueStrings takes a slice of strings and returns the unique values
+// (in arbitrary order)
+func UniqueStrings(s []string) (r []string) {
+	empty := struct{}{}
+	seen := make(map[string]struct{})
+	for _, val := range s {
+		if _, ok := seen[val]; !ok {
+			r = append(r, val)
+			seen[val] = empty
+		}
+	}
+	return r
+}
