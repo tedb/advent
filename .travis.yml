@@ -1,0 +1,24 @@
+os:
+  - linux
+dist: trusty
+
+language: c
+
+install:
+  - |
+      wget http://nim-lang.org/download/nim-0.17.2.tar.xz
+      tar xf nim-0.17.2.tar.xz
+      cd nim-0.17.2
+      sh build.sh
+      cd ..
+before_script:
+  - set -e
+  - set -x
+  - export PATH=`pwd`/nim-0.17.2/bin:$PATH
+
+script:
+  - cd tests
+  - nim c -r tester
+
+notifications:
+  email: false]
