@@ -37,3 +37,8 @@ suite "day2a":
   test "example":
     let input = "5 1 9 5\n7 5 3\n2 4 6 8"
     check day2.day2CorruptionChecksumA(input) == "18"
+
+suite "day2b":
+  test "example":
+    let input = "5 9 2 8\n9 4 7 3\n3 8 6 5"
+    check day2.day2CorruptionChecksumB(input) == "9"
