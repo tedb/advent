@@ -1,6 +1,7 @@
 import adventpkg/day1
+import adventpkg/day2
 
-proc dispatch*(day: string, a: bool, b: bool, input: string = nil): string =
+proc dispatch*(day: string, a: bool, b: bool, input: string): string =
   var a = a
   var b = b
   if not a and not b:
@@ -32,4 +33,11 @@ Options:
 
   let args = docopt(doc, version = "advent 0.1.0")
 
-  echo dispatch($ args["<day>"], args["a"], args["b"], $ args["<input>"])
+  var v = $ args["<input>"]
+  if not args["<input>"]:
+    v = readAll(stdin)
+    echo "read ", v.len, " bytes from stdin"
+    if v.len == 0:
+      quit("stdin was zero length")
+
+  echo dispatch($ args["<day>"], args["a"], args["b"], v)
