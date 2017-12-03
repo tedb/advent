@@ -1,6 +1,7 @@
 import unittest, ../advent
 import ../adventpkg/day1
 import ../adventpkg/day2
+import ../adventpkg/day3
 
 suite "day1a":
   test "1122":
@@ -42,3 +43,17 @@ suite "day2b":
   test "example":
     let input = "5 9 2 8\n9 4 7 3\n3 8 6 5"
     check day2.day2CorruptionChecksumB(input) == "9"
+
+suite "day3a":
+  test "1":
+    let input = "1"
+    check day3.day3SpiralMemoryA(input) == "0"
+  test "12":
+    let input = "12"
+    check day3.day3SpiralMemoryA(input) == "3"
+  test "23":
+    let input = "23"
+    check day3.day3SpiralMemoryA(input) == "2"
+  test "1024":
+    let input = "1024"
+    check day3.day3SpiralMemoryA(input) == "31"
