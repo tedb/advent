@@ -15,7 +15,7 @@ proc day1InverseCaptchaA*(input: string, offset: int = 1): string =
   var sum = 0
   for a, b in CircularDigitString(digits: input, offset: offset):
     if a == b:
-      sum += parseInt($a)
+      sum += int(a) - int('0')
   result = $sum
 
 proc day1InverseCaptchaB*(input: string): string =
