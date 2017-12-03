@@ -1,21 +1,27 @@
+import strutils
 import adventpkg/day1
 import adventpkg/day2
 
 proc dispatch*(day: string, a: bool, b: bool, input: string): string =
-  var a = a
-  var b = b
   if not a and not b:
-    a = true
-    b = true
+    return "%s\n%s" % [dispatch(day, true, false, input), dispatch(day, false, true, input)]
+
+  # TODO: convert case statement to lookup table + tuples
 
   case day
   of "1":
     if a:
-      result = day1.day1InverseCaptchaA(input)
+      return day1.day1InverseCaptchaA(input)
     if b:
-      result = day1.day1InverseCaptchaB(input)
+      return day1.day1InverseCaptchaB(input)
+  of "2":
+    if a:
+      return day2.day2CorruptionChecksumA(input)
+    if b:
+      return day2.day2CorruptionChecksumB(input)
+
   else:
-    echo "Day", day, "is not implemented"
+    quit("Day " & day & " is not implemented")
 
 when isMainModule:
   import docopt, tables, strutils
@@ -39,5 +45,6 @@ Options:
     echo "read ", v.len, " bytes from stdin"
     if v.len == 0:
       quit("stdin was zero length")
+  v.removeSuffix
 
   echo dispatch($ args["<day>"], args["a"], args["b"], v)
