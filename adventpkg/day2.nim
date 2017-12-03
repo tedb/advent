@@ -9,17 +9,13 @@ proc findDivisibles(ints: seq[int]): int =
 proc maxDiff(ints: seq[int]): int =
   ints.max - ints.min
 
-proc checksum(input: string, linechecker: proc): string =
-  var sum = 0
-
+proc checksum(input: string, linechecker: proc): int =
   for line in splitLines(input):
     var ints = line.splitWhitespace().map(parseInt)
-    sum += linechecker(ints)
-
-  $ sum
+    result += linechecker(ints)
 
 proc day2CorruptionChecksumA*(input: string): string =
-  checksum(input, maxDiff)
+  $ checksum(input, maxDiff)
 
 proc day2CorruptionChecksumB*(input: string): string =
-  checksum(input, findDivisibles)
+  $ checksum(input, findDivisibles)
