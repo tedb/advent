@@ -1,4 +1,6 @@
-import unittest, ../advent, ../adventpkg/day1
+import unittest, ../advent
+import ../adventpkg/day1
+import ../adventpkg/day2
 
 suite "day1a":
   test "1122":
@@ -30,3 +32,8 @@ suite "day1b":
   test "12131415":
     let input = "12131415"
     check day1.day1InverseCaptchaB(input) == "4"
+
+suite "day2a":
+  test "example":
+    let input = "5 1 9 5\n7 5 3\n2 4 6 8"
+    check day2.day2CorruptionChecksumA(input) == "18"
