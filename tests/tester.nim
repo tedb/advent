@@ -3,6 +3,7 @@ import ../adventpkg/day1
 import ../adventpkg/day2
 import ../adventpkg/day3
 import ../adventpkg/day4
+import ../adventpkg/day5
 
 suite "day1a":
   test "1122":
@@ -63,7 +64,13 @@ suite "day4a":
   test "example":
     let input = "aa bb cc dd ee\naa bb cc dd aa\naa bb cc dd aaa"
     check day4.day4HighEntropyPassphrasesA(input) == "2"
+
 suite "day4b":
   test "example":
     let input = "abcde fghij\nabcde xyz ecdab\na ab abc abd abf abj\niiii oiii ooii oooi oooo\noiii ioii iioi iiio"
     check day4.day4HighEntropyPassphrasesB(input) == "3"
+
+suite "day5a":
+  test "example":
+    let input = "0\n3\n0\n1\n-3"
+    check day5.day5MazeTwistyTrampolinesA(input) == "5"
