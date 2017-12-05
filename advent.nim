@@ -27,9 +27,9 @@ proc dispatch*(day: string, input: string): string =
   of "4b":
     return day4.day4HighEntropyPassphrasesB(input)
   of "5a":
-    return day5.day4MazeTwistyTrampolinesA(input)
+    return day5.day5MazeTwistyTrampolinesA(input)
   of "5b":
-    return day5.day4MazeTwistyTrampolinesB(input)
+    return day5.day5MazeTwistyTrampolinesB(input)
 
   else:
     quit("Day " & day & " is not implemented")
