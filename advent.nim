@@ -31,6 +31,12 @@ proc dispatch*(day: string, a: bool, b: bool, input: string): string =
       return day4.day4HighEntropyPassphrasesA(input)
     if b:
       return day4.day4HighEntropyPassphrasesB(input)
+  of "5":
+    if a:
+      return day5.day4MazeTwistyTrampolinesA(input)
+    if b:
+      return day5.day4MazeTwistyTrampolinesB(input)
+
   else:
     quit("Day " & day & " is not implemented")
 
