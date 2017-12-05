@@ -22,29 +22,37 @@ proc first(level: Level): int =
   Level(level-1).last + 1
 
 proc xOffset(level: Level, n: int): int =
-  if level == 0:
+  if n == 1:
     return 0
   elif n == level.first:
     return int(level) - 1
   elif n == level.last:
     return int(level)
+  else:
+    raise newException(OSError, "that int isn't supported yet")
 
 proc yOffset(level: Level, n: int): int =
-  if level == 0:
+  if n == 1:
     return 0
   elif n == level.first:
     return int(level) - 1
   elif n == level.last:
     return int(level)
+  else:
+    raise newException(OSError, "that int isn't supported yet")
 
 proc findLevel(n: int): Level =
   while Level(result).last < n:
     inc result
 
 proc day3SpiralMemoryA*(input: string): string =
-  let L = findLevel(parseInt(input))
+  let n = parseInt(input)
 
-  $ L
+  let L = findLevel(n)
+  echo "$# is level $# (min $#, max $#, width $#), $# from beginning." % [
+    $n, $L, $L.first, $L.last, $L.width, $(n - L.first)]
+
+  $ (L.xOffset(n) + L.yOffset(n))
 
 proc day3SpiralMemoryB*(input: string): string =
   let L = findLevel(parseInt(input))
