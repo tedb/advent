@@ -2,6 +2,7 @@ import strutils
 import adventpkg/day1
 import adventpkg/day2
 import adventpkg/day3
+import adventpkg/day4
 
 proc dispatch*(day: string, a: bool, b: bool, input: string): string =
   if not a and not b:
@@ -25,6 +26,11 @@ proc dispatch*(day: string, a: bool, b: bool, input: string): string =
       return day3.day3SpiralMemoryA(input)
     if b:
       return day3.day3SpiralMemoryB(input)
+  of "4":
+    if a:
+      return day4.day4HighEntropyPassphrasesA(input)
+    if b:
+      return day4.day4HighEntropyPassphrasesB(input)
   else:
     quit("Day " & day & " is not implemented")
 
