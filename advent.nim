@@ -1,6 +1,7 @@
 import strutils
 import adventpkg/day1
 import adventpkg/day2
+import adventpkg/day3
 
 proc dispatch*(day: string, a: bool, b: bool, input: string): string =
   if not a and not b:
@@ -19,7 +20,11 @@ proc dispatch*(day: string, a: bool, b: bool, input: string): string =
       return day2.day2CorruptionChecksumA(input)
     if b:
       return day2.day2CorruptionChecksumB(input)
-
+  of "3":
+    if a:
+      return day3.day3SpiralMemoryA(input)
+    if b:
+      return day3.day3SpiralMemoryB(input)
   else:
     quit("Day " & day & " is not implemented")
 
