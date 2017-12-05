@@ -2,6 +2,7 @@ import unittest, ../advent
 import ../adventpkg/day1
 import ../adventpkg/day2
 import ../adventpkg/day3
+import ../adventpkg/day4
 
 suite "day1a":
   test "1122":
@@ -57,3 +58,8 @@ suite "day3a":
   test "1024":
     let input = "1024"
     check day3.day3SpiralMemoryA(input) == "31"
+
+suite "day4a":
+  test "example":
+    let input = "aa bb cc dd ee\naa bb cc dd aa\naa bb cc dd aaa"
+    check day4.day4HighEntropyPassphrasesA(input) == "2"
