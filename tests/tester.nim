@@ -74,3 +74,8 @@ suite "day5a":
   test "example":
     let input = "0\n3\n0\n1\n-3"
     check day5.day5MazeTwistyTrampolinesA(input) == "5"
+
+suite "day5b":
+  test "example":
+    let input = "0\n3\n0\n1\n-3"
+    check day5.day5MazeTwistyTrampolinesB(input) == "10"
