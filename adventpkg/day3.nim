@@ -12,9 +12,9 @@ proc perimeter(level: Level): int =
   level * 8
 
 proc last(level: Level): int =
-  if level == 0:
-    return 1
-  (level*8) + Level(level-1).last
+  # x squared; math.pow requries floats
+  let x = (2*level + 1)
+  x * x
 
 proc first(level: Level): int =
   if level == 0:
