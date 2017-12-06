@@ -21,25 +21,6 @@ proc first(level: Level): int =
     return 1
   Level(level-1).last + 1
 
-proc xOffset(level: Level, n: int): int =
-  if n == 1:
-    return 0
-  elif n == level.first:
-    return int(level) - 1
-  elif n == level.last:
-    return int(level)
-  else:
-    raise newException(OSError, "that int isn't supported yet")
-
-proc yOffset(level: Level, n: int): int =
-  if n == 1:
-    return 0
-  elif n == level.first:
-    return int(level) - 1
-  elif n == level.last:
-    return int(level)
-  else:
-    raise newException(OSError, "that int isn't supported yet")
 
 proc findLevel(n: int): Level =
   while Level(result).last < n:
@@ -74,37 +55,6 @@ when isMainModule:
   assert Level(0).last == 1
   assert Level(1).last == 9
   assert Level(2).last == 25
-
-  assert Level(0).xOffset(1) == 0
-  assert Level(0).yOffset(1) == 0
-
-  assert Level(1).xOffset(8) == 0
-  assert Level(1).yOffset(8) == 1
-
-  assert Level(1).xOffset(9) == 1
-  assert Level(1).yOffset(9) == 1
-
-  assert Level(1).xOffset(7) == 1
-  assert Level(1).yOffset(7) == 1
-
-  assert Level(1).xOffset(5) == 1
-  assert Level(1).yOffset(5) == 1
-
-  assert Level(2).xOffset(10) == 2
-  assert Level(2).yOffset(10) == 1
-
-  assert Level(2).xOffset(11) == 2
-  assert Level(2).yOffset(11) == 0
-
-  assert Level(2).xOffset(13) == 2
-  assert Level(2).yOffset(13) == 2
-
-  assert Level(3).xOffset(30) == 3
-  assert Level(3).yOffset(30) == 2
-
-  assert Level(3).xOffset(37) == 3
-  assert Level(3).yOffset(37) == 3
-
 
   assert findLevel(1) == 0
   assert findLevel(2) == 1
