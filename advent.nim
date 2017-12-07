@@ -7,7 +7,9 @@ import adventpkg/day5
 
 proc dispatch*(day: string, input: string): string =
   if day.allCharsInSet(Digits):
-    return "%s\n%s" % [dispatch(day & "a", input), dispatch(day & "b", input)]
+    let a = dispatch(day & "a", input)
+    let b = dispatch(day & "b", input)
+    return a & "\n" & b
 
   case day
   of "1a":
