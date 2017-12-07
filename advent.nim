@@ -4,6 +4,7 @@ import adventpkg/day2
 import adventpkg/day3
 import adventpkg/day4
 import adventpkg/day5
+import adventpkg/day7
 
 proc dispatch*(day: string, input: string): string =
   if day.allCharsInSet(Digits):
@@ -32,6 +33,8 @@ proc dispatch*(day: string, input: string): string =
     return day5.day5MazeTwistyTrampolinesA(input)
   of "5b":
     return day5.day5MazeTwistyTrampolinesB(input)
+  of "7a":
+    return day7.day7RecursiveCircusA(input)
 
   else:
     quit("Day " & day & " is not implemented")

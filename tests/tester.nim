@@ -1,9 +1,11 @@
-import unittest, ../advent
+import unittest, strutils
+import ../advent
 import ../adventpkg/day1
 import ../adventpkg/day2
 import ../adventpkg/day3
 import ../adventpkg/day4
 import ../adventpkg/day5
+import ../adventpkg/day7
 
 suite "day1a":
   test "1122":
@@ -70,12 +72,32 @@ suite "day4b":
     let input = "abcde fghij\nabcde xyz ecdab\na ab abc abd abf abj\niiii oiii ooii oooi oooo\noiii ioii iioi iiio"
     check day4.day4HighEntropyPassphrasesB(input) == "3"
 
-suite "day5a":
-  test "example":
-    let input = "0\n3\n0\n1\n-3"
+suite "day5":
+  let input = "0\n3\n0\n1\n-3"
+
+  test "day5a":
     check day5.day5MazeTwistyTrampolinesA(input) == "5"
 
-suite "day5b":
-  test "example":
-    let input = "0\n3\n0\n1\n-3"
+  test "day5b":
     check day5.day5MazeTwistyTrampolinesB(input) == "10"
+
+suite "day7":
+  var input = """pbga (66)
+    xhth (57)
+    ebii (61)
+    havc (66)
+    ktlj (57)
+    fwft (72) -> ktlj, cntj, xhth
+    qoyq (66)
+    padx (45) -> pbga, havc, qoyq
+    tknk (41) -> ugml, padx, fwft
+    jptl (61)
+    ugml (68) -> gyxo, ebii, jptl
+    gyxo (61)
+    cntj (57)""".unindent
+
+  test "day7a":
+    check day7RecursiveCircusA(input) == "tknk"
+
+  test "day7b":
+    check day7RecursiveCircusB(input) == "60"
