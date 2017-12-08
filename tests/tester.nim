@@ -38,13 +38,12 @@ suite "day1b":
     let input = "12131415"
     check day1.day1InverseCaptchaB(input) == "4"
 
-suite "day2a":
-  test "example":
+suite "day2":
+  test "day2a":
     let input = "5 1 9 5\n7 5 3\n2 4 6 8"
     check day2.day2CorruptionChecksumA(input) == "18"
 
-suite "day2b":
-  test "example":
+  test "day2b":
     let input = "5 9 2 8\n9 4 7 3\n3 8 6 5"
     check day2.day2CorruptionChecksumB(input) == "9"
 
@@ -62,12 +61,11 @@ suite "day3a":
     let input = "1024"
     check day3.day3SpiralMemoryA(input) == "31"
 
-suite "day4a":
-  test "example":
+suite "day4":
+  test "day4a":
     let input = "aa bb cc dd ee\naa bb cc dd aa\naa bb cc dd aaa"
     check day4.day4HighEntropyPassphrasesA(input) == "2"
 
-suite "day4b":
   test "example":
     let input = "abcde fghij\nabcde xyz ecdab\na ab abc abd abf abj\niiii oiii ooii oooi oooo\noiii ioii iioi iiio"
     check day4.day4HighEntropyPassphrasesB(input) == "3"

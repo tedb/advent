@@ -1,15 +1,37 @@
-import nre, strutils, sets, sequtils, tables, future
+import nre, strutils, sets, sequtils, tables, future, algorithm
 
 type
   Node = tuple[name: string, weight: int, children: seq[string]]
+
+proc findUnique[T](v: seq[T]): T =
+  var v = v
+  v.sort(cmp)
+  let last = v.len-1
+
+  if v.len == 1:
+    return v[0]
+  elif v[0] == v[last]:
+    return
+  elif v.len == 2:
+    #echo "2 elements in findUnique; choosing higher"
+    return v[1]
+
+  if v[0] != v[last]:
+    if v[0] != v[1]:
+      result = v[0]
+      #echo "low value $# is the oddball for $#" % [$result, $v]
+    else:
+      result = v[last]
+      #echo "high value $# is the oddball for $#" % [$result, $v]
 
 proc selfAndChildrensWeight(n: Node, nodes: Table[string, Node]): int =
   result = n.weight
 
   let weights = n.children.map((c: string) => nodes[c].selfAndChildrensWeight(nodes))
   if weights.len > 0:
-    if weights.min != weights.max:
-      raise newException(OSError, "min $# != max $#" % [$weights.min, $weights.max])
+    let uniq = weights.findUnique
+    if uniq != 0:
+      echo "$#: weight: $#, children: $#, unique: $#" % [n.name, $n.weight, $weights, $uniq]
     result += weights.foldl(a+b)
 
 # lgxjcy (359) -> vsbfmt, kbdcl
@@ -49,3 +71,10 @@ proc day7RecursiveCircusB*(input: string): string =
 when isMainModule:
   assert parseLine("lgxjcy (359) -> vsbfmt, kbdcl") == Node(("lgxjcy", 359, @["vsbfmt", "kbdcl"]))
   assert parseLine("z (1)") == Node(("z", 1, @[]))
+
+  assert findUnique(@[1, 1, 2]) == 2
+  assert findUnique(@[2, 1, 1]) == 2
+  assert findUnique(@[2, 2, 1]) == 1
+  assert findUnique(@[2, 1]) == 2
+  assert findUnique(@[2]) == 2
+  assert findUnique(@[2, 2, 2]) == 0
