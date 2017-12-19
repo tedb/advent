@@ -37,7 +37,10 @@ proc dispatch*(day: string, input: string): string =
     return day7.day7RecursiveCircusA(input)
   of "7b":
     return day7.day7RecursiveCircusB(input)
-
+  of "16a":
+    return day16.day16PermutationPromenadeA(input)
+  of "16b":
+    return day16.day16PermutationPromenadeB(input)
   else:
     quit("Day " & day & " is not implemented")
 
