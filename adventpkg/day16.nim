@@ -12,8 +12,18 @@ proc find[T](d: var seq[T], item: T): Natural {.inline.}=
   quit "item " & $item & " was not found in seq"
 
 proc spin[T](s: var seq[T]; n: Natural) {.inline.} =
-  s.insert(s[s.len-n..<s.len])
-  s.setLen(s.len-n)
+  #s.insert(s[s.len-n..<s.len])
+  #s.setLen(s.len-n)
+
+  # let prefix = s[0..<s.len-n]
+  # s = s[s.len-n..<s.len]
+  # s.add(prefix)
+
+  let oldEnd = s.len-n
+  s.add(s[0..<oldEnd])
+  #echo s
+  s.delete(0, <oldEnd)
+  #echo s
 
 proc exchange[T](d: var seq[T], pos1, pos2: Natural) {.inline.} =
   swap(d[pos1], d[pos2])
@@ -83,12 +93,18 @@ when isMainModule:
   assert d[1] == 'a'
   assert d[15] == 'o'
 
+  d.spin(2)
+  assert d[0] == 'n'
+  assert d[1] == 'o'
+  assert d[15] == 'm'
+  d.spin(13)
+
   d.exchange(2, 5)
-  assert d[0] == 'p'
-  assert d[15] == 'o'
-  assert d[2] == 'e'
-  assert d[5] == 'b'
+  assert d[0] == 'a'
+  assert d[15] == 'p'
+  assert d[2] == 'f'
+  assert d[5] == 'c'
 
   d.partner('g', 'n')
-  assert d[7] == 'n'
-  assert d[14] == 'g'
+  assert d[6] == 'n'
+  assert d[13] == 'g'
