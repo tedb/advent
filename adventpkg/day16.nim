@@ -5,11 +5,11 @@ proc initDancers(length: Natural = 16): seq[char] =
   for i, x in result.mpairs:
     x = char(int8('a') + i)
 
-proc find[T](d: var seq[T], item: T): Natural {.raises: [IndexError].}=
+proc find[T](d: var seq[T], item: T): Natural {.inline.}=
   for i, x in d:
     if x == item:
       return i
-  raise newException(IndexError, "item " & $item & " was not found in seq")
+  quit "item " & $item & " was not found in seq"
 
 proc spin[T](s: var seq[T]; n: Natural) {.inline.} =
   s.insert(s[s.len-n..<s.len])
