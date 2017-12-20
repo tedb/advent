@@ -82,19 +82,8 @@ when isMainModule:
   assert d[0] == 'a'
   assert d[15] == 'p'
 
-  try:
-    assert d.find('a') == 0
-    assert d.find('p') == 15
-  except IndexError:
-    echo "didn't find letter"
-    assert false
-
-  # Make sure it raises an exception for a letter not found
-  try:
-    assert d.find('z') == 0
-    assert false
-  except IndexError:
-    discard
+  assert d.find('a') == 0
+  assert d.find('p') == 15
 
   d.spin(1)
   assert d[0] == 'p'
