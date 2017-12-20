@@ -105,3 +105,5 @@ suite "day16":
   var input = "s1,x3/4,pe/b"
   test "day16a":
     check day16PermutationPromenadeA(input, 5) == "baedc"
+  test "day16b":
+    check day16PermutationPromenadeB(input, 5) == "ceadb"

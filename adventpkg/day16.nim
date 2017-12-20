@@ -1,8 +1,6 @@
 import sequtils, parseutils, strutils
 
-type Dancers = seq[char]
-
-proc initDancers(length: Natural = 16): Dancers =
+proc initDancers(length: Natural = 16): seq[char] =
   result = newSeq[char](length)
   for i, x in result.mpairs:
     x = char(int8('a') + i)
@@ -24,8 +22,7 @@ proc exchange[T](d: var seq[T], pos1, pos2: Natural) {.inline.} =
 proc partner[T](d: var seq[T], name1, name2: char) {.inline.} =
   d.exchange(d.find(name1), d.find(name2))
 
-proc day16PermutationPromenadeA*(input: string, length: Natural = 16): string =
-  var d = initDancers(length)
+proc dance(d: var seq[char], input: string) =
   var i, n, m: Natural = 0
   while i < <input.len:
     inc(i)
@@ -49,14 +46,22 @@ proc day16PermutationPromenadeA*(input: string, length: Natural = 16): string =
       quit "next char for " & $i & " isn't comma, got " & input[i]
     inc(i)
 
-  result = d.join()
+proc day16PermutationPromenadeA*(input: string, length: Natural = 16): string =
+  var d = initDancers(length)
+  d.dance(input)
+  d.join()
 
-proc day16PermutationPromenadeB*(input: string): string =
-  ""
+proc day16PermutationPromenadeB*(input: string, length: Natural = 16): string =
+  var d = initDancers(length)
+  for i in 0..<1_000_000_000:
+    if i mod 100 == 0:
+      echo $i
+    d.dance(input)
+
+  d.join()
 
 when isMainModule:
   var d = initDancers()
-  echo repr(d)
   assert d[0] == 'a'
   assert d[15] == 'p'
 
@@ -75,13 +80,11 @@ when isMainModule:
     discard
 
   d.spin(1)
-  echo repr(d)
   assert d[0] == 'p'
   assert d[1] == 'a'
   assert d[15] == 'o'
 
   d.exchange(2, 5)
-  echo repr(d)
   assert d[0] == 'p'
   assert d[15] == 'o'
   assert d[2] == 'e'
