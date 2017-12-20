@@ -6,6 +6,7 @@ import ../adventpkg/day3
 import ../adventpkg/day4
 import ../adventpkg/day5
 import ../adventpkg/day7
+import ../adventpkg/day16
 
 suite "day1a":
   test "1122":
@@ -99,3 +100,8 @@ suite "day7":
 
   test "day7b":
     check day7RecursiveCircusB(input) == "60"
+
+suite "day16":
+  var input = "s1,x3/4,pe/b"
+  test "day16a":
+    check day16PermutationPromenadeA(input, 5) == "baedc"

@@ -5,6 +5,7 @@ import adventpkg/day3
 import adventpkg/day4
 import adventpkg/day5
 import adventpkg/day7
+import adventpkg/day16
 
 proc dispatch*(day: string, input: string): string =
   if day.allCharsInSet(Digits):
