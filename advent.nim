@@ -1,3 +1,4 @@
+#import nimprof
 import strutils
 import adventpkg/day1
 import adventpkg/day2
