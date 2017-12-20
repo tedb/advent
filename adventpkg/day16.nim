@@ -1,15 +1,9 @@
-import sequtils
+import sequtils, parseutils, strutils
 
 type Dancers = seq[char]
 
-proc day16PermutationPromenadeA*(input: string): string =
-  ""
-
-proc day16PermutationPromenadeB*(input: string): string =
-  ""
-
-proc initDancers(): Dancers =
-  result = newSeq[char](16)
+proc initDancers(length: Natural = 16): Dancers =
+  result = newSeq[char](length)
   for i, x in result.mpairs:
     x = char(int8('a') + i)
 
@@ -19,19 +13,46 @@ proc find[T](d: var seq[T], item: T): Natural {.raises: [IndexError].}=
       return i
   raise newException(IndexError, "item " & $item & " was not found in seq")
 
-proc spin[T](s: var seq[T]; n: Natural) =
+proc spin[T](s: var seq[T]; n: Natural) {.inline.} =
   let prefix = s[0..<s.len-n]
   let suffix = s[s.len-n..<s.len]
   s = concat(suffix, prefix)
 
-proc exchange[T](d: var seq[T], pos1, pos2: Natural) =
-  # TODO: use integer swap trick with xor
-  let tmp = d[pos1]
-  d[pos1] = d[pos2]
-  d[pos2] = tmp
+proc exchange[T](d: var seq[T], pos1, pos2: Natural) {.inline.} =
+  swap(d[pos1], d[pos2])
 
-proc partner[T](d: var seq[T], name1, name2: char) =
+proc partner[T](d: var seq[T], name1, name2: char) {.inline.} =
   d.exchange(d.find(name1), d.find(name2))
+
+proc day16PermutationPromenadeA*(input: string, length: Natural = 16): string =
+  var d = initDancers(length)
+  var i, n, m: Natural = 0
+  while i < <input.len:
+    inc(i)
+    case input[i-1]:
+    of 's':  # s1
+      i += parseInt(input, n, i)
+
+      d.spin(n)
+    of 'x':  # x3/4
+      i += parseInt(input, n, i)
+      inc(i) # skip slash
+      i += parseInt(input, m, i)
+
+      d.exchange(n, m)
+    of 'p':  # pe/b
+      d.partner(input[i], input[i+2])
+      inc(i, 3)
+    else:
+      quit "got invalid char " & input[i]
+    if i < input.len and input[i] != ',':
+      quit "next char for " & $i & " isn't comma, got " & input[i]
+    inc(i)
+
+  result = d.join()
+
+proc day16PermutationPromenadeB*(input: string): string =
+  ""
 
 when isMainModule:
   var d = initDancers()
