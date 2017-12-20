@@ -12,9 +12,8 @@ proc find[T](d: var seq[T], item: T): Natural {.raises: [IndexError].}=
   raise newException(IndexError, "item " & $item & " was not found in seq")
 
 proc spin[T](s: var seq[T]; n: Natural) {.inline.} =
-  let prefix = s[0..<s.len-n]
-  let suffix = s[s.len-n..<s.len]
-  s = concat(suffix, prefix)
+  s.insert(s[s.len-n..<s.len])
+  s.setLen(s.len-n)
 
 proc exchange[T](d: var seq[T], pos1, pos2: Natural) {.inline.} =
   swap(d[pos1], d[pos2])
