@@ -11,6 +11,13 @@ proc find[T](d: var seq[T], item: T): Natural {.inline.}=
       return i
   quit "item " & $item & " was not found in seq"
 
+proc find2(d: var seq[char], item1, item2: char): tuple[m, n: Natural] {.inline.}=
+  for i, x in d:
+    if x == item1:
+      result.m = i
+    elif x == item2:
+      result.n = i
+
 proc spin[T](s: var seq[T]; n: Natural) {.inline.} =
   #s.insert(s[s.len-n..<s.len])
   #s.setLen(s.len-n)
@@ -29,7 +36,8 @@ proc exchange[T](d: var seq[T], pos1, pos2: Natural) {.inline.} =
   swap(d[pos1], d[pos2])
 
 proc partner[T](d: var seq[T], name1, name2: char) {.inline.} =
-  d.exchange(d.find(name1), d.find(name2))
+  let m, n = d.find2(name1, name2)
+  d.exchange(m, n)
 
 proc dance(d: var seq[char], input: string) =
   var i, n, m: Natural = 0
