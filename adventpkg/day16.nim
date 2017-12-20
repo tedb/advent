@@ -1,4 +1,4 @@
-import sequtils, parseutils, strutils
+import sequtils, parseutils, strutils, tables
 
 proc initDancers(length: Natural = 16): seq[char] =
   result = newSeq[char](length)
@@ -143,11 +143,20 @@ proc day16PermutationPromenadeA*(input: string, length: Natural = 16): string =
   d.join()
 
 proc day16PermutationPromenadeB*(input: string, length: Natural = 16): string =
+  var memo = initTable[seq[char], seq[char]](512)
   var d = initDancers(length)
-  for i in 0..<1_000_000_000:
-    if i mod 100 == 0:
-      echo $i
-    d.dance(input)
+  let runs = 1_000_000_000 #mod 300
+  for i in 0..<runs:
+    if i mod 1000 == 0:
+      echo $i, ": ", $d
+    if d in memo and d != memo[d]:
+      #for k, v in memo:
+        #echo "k ", $k, " v ", $v
+      d = memo[d]
+    else:
+      let startVal = d
+      d.dance(input)
+      memo[startVal] = d
 
   d.join()
 
