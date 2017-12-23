@@ -69,21 +69,40 @@ proc day16PermutationPromenadeA*(input: string, length: Natural = 16): string =
   d.join()
 
 proc day16PermutationPromenadeB*(input: string, length: Natural = 16): string =
-  var d = initDancers(length)
-  for i in 0..<1_000_000_000:
+  let firstDancers = initDancers(length)
+  var d = firstDancers
+
+  var cyclePeriod: int
+
+  for i in 1..1_000_000_000:
     if i mod 100 == 0:
-      echo $i
+      echo "at $#: $#".format(i, d)
+
+    d.dance(input)
+    if d == firstDancers:
+      echo "matched at $#, $# == $#".format(i, d, firstDancers)
+      cyclePeriod = i
+      break
+
+  # Get the positions at the billionth iteration with the redundanat cycles eliminated
+  d = firstDancers
+  for i in 1..(1_000_000_000 mod cyclePeriod):
     d.dance(input)
 
   d.join()
 
 when isMainModule:
-  var d = initDancers()
+  let firstDancers = initDancers()
+  var d = firstDancers
+  assert firstDancers == d
   assert d[0] == 'a'
   assert d[15] == 'p'
 
   assert d.find('a') == 0
   assert d.find('p') == 15
+
+  var find_result: tuple[m, n: Natural] = (Natural(0), Natural(15))
+  assert find_result == d.find2('a', 'p')
 
   d.spin(1)
   assert d[0] == 'p'
@@ -105,3 +124,7 @@ when isMainModule:
   d.partner('g', 'n')
   assert d[6] == 'n'
   assert d[13] == 'g'
+
+  assert firstDancers != d
+
+  echo "all asserts passed"
