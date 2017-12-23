@@ -12,85 +12,11 @@ proc initDancers(length: Natural = 16): seq[char] =
 #   quit "item " & $item & " was not found in seq"
 
 proc find2[T](d: var seq[T], item1, item2: T): tuple[m, n: Natural] {.inline.}=
-  if d[0] == item1:
-    result.m = 0
-  elif d[0] == item2:
-    result.n = 0
-
-  if d[1] == item1:
-    result.m = 1
-  elif d[1] == item2:
-    result.n = 1
-
-  if d[2] == item1:
-    result.m = 2
-  elif d[2] == item2:
-    result.n = 2
-
-  if d[3] == item1:
-    result.m = 3
-  elif d[3] == item2:
-    result.n = 3
-
-  if d[4] == item1:
-    result.m = 4
-  elif d[4] == item2:
-    result.n = 4
-
-  if d[5] == item1:
-    result.m = 5
-  elif d[5] == item2:
-    result.n = 5
-
-  if d[6] == item1:
-    result.m = 6
-  elif d[6] == item2:
-    result.n = 6
-
-  if d[7] == item1:
-    result.m = 7
-  elif d[7] == item2:
-    result.n = 7
-
-  if d[8] == item1:
-    result.m = 8
-  elif d[8] == item2:
-    result.n = 8
-
-  if d[9] == item1:
-    result.m = 9
-  elif d[9] == item2:
-    result.n = 9
-
-  if d[10] == item1:
-    result.m = 10
-  elif d[10] == item2:
-    result.n = 10
-
-  if d[11] == item1:
-    result.m = 11
-  elif d[11] == item2:
-    result.n = 11
-
-  if d[12] == item1:
-    result.m = 12
-  elif d[12] == item2:
-    result.n = 12
-
-  if d[13] == item1:
-    result.m = 13
-  elif d[13] == item2:
-    result.n = 13
-
-  if d[14] == item1:
-    result.m = 14
-  elif d[14] == item2:
-    result.n = 14
-
-  if d[15] == item1:
-    result.m = 15
-  elif d[15] == item2:
-    result.n = 15
+  for i, x in d:
+    if x == item1:
+      result.m = i
+    elif x == item2:
+      result.n = i
 
 proc spin[T](s: var seq[T]; n: Natural) {.inline.} =
   #s.insert(s[s.len-n..<s.len])
