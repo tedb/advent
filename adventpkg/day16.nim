@@ -5,18 +5,15 @@ proc initDancers(length: Natural = 16): seq[char] =
   for i, x in result.mpairs:
     x = char(int8('a') + i)
 
-# proc find[T](d: var seq[T], item: T): Natural {.inline.}=
-#   for i, x in d:
-#     if x == item:
-#       return i
-#   quit "item " & $item & " was not found in seq"
-
+# Find the positions of 2 items in seq
 proc find2[T](d: var seq[T], item1, item2: T): tuple[m, n: Natural] {.inline.}=
   for i, x in d:
     if x == item1:
       result.m = i
     elif x == item2:
       result.n = i
+  if result.m == 0 and result.n == 0:
+    quit "item " & $item1 & " or " & $item2 & " was not found in seq"
 
 proc spin[T](s: var seq[T]; n: Natural) {.inline.} =
   #s.insert(s[s.len-n..<s.len])
@@ -97,9 +94,6 @@ when isMainModule:
   assert firstDancers == d
   assert d[0] == 'a'
   assert d[15] == 'p'
-
-  assert d.find('a') == 0
-  assert d.find('p') == 15
 
   var find_result: tuple[m, n: Natural] = (Natural(0), Natural(15))
   assert find_result == d.find2('a', 'p')
