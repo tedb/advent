@@ -6,6 +6,7 @@ import ../adventpkg/day3
 import ../adventpkg/day4
 import ../adventpkg/day5
 import ../adventpkg/day7
+import ../adventpkg/day12
 import ../adventpkg/day16
 
 suite "day1a":
@@ -100,6 +101,20 @@ suite "day7":
 
   test "day7b":
     check day7RecursiveCircusB(input) == "60"
+
+suite "day12":
+  var input = """0 <-> 2
+1 <-> 1
+2 <-> 0, 3, 4
+3 <-> 2, 4
+4 <-> 2, 3, 6
+5 <-> 6
+6 <-> 4, 5""".unindent
+
+  test "day12a":
+    check day12DigitalPlumberA(input) == "6"
+  test "day12b":
+    check day12DigitalPlumberB(input) == "6"
 
 suite "day16":
   var input = "s1,x3/4,pe/b"
