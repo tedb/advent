@@ -1,4 +1,4 @@
-import sequtils, parseutils, strutils
+import sequtils, parseutils, strutils, times, os
 
 proc initDancers(length: Natural = 16): seq[char] =
   result = newSeq[char](length)
@@ -15,19 +15,29 @@ proc find2[T](d: var seq[T], item1, item2: T): tuple[m, n: Natural] {.inline.}=
   if result.m == 0 and result.n == 0:
     quit "item " & $item1 & " or " & $item2 & " was not found in seq"
 
-proc spin[T](s: var seq[T]; n: Natural) {.inline.} =
-  #s.insert(s[s.len-n..<s.len])
-  #s.setLen(s.len-n)
+proc spin(s: var seq[char]; n: Natural) =
+  s.insert(s[s.len-n..<s.len])
+  s.setLen(s.len-n)
 
-  # let prefix = s[0..<s.len-n]
-  # s = s[s.len-n..<s.len]
-  # s.add(prefix)
+proc spin2(s: var seq[char]; n: Natural) =
+  let prefix = s[0..<s.len-n]
+  let suffix = s[s.len-n..<s.len]
+  s[0..<s.len-n] = suffix
+  s[s.len-n..<s.len] = prefix
 
+proc spin3(s: var seq[char]; n: Natural) =
+  let prefix = s[0..<s.len-n]
+  s = s[s.len-n..<s.len]
+  s.add(prefix)
+
+proc spin4(s: var seq[char]; n: Natural) =
   let oldEnd = s.len-n
   s.add(s[0..<oldEnd])
-  #echo s
   s.delete(0, <oldEnd)
-  #echo s
+
+proc spinInline(s: var seq[char]; n: Natural) {.inline.} =
+  s.insert(s[s.len-n..<s.len])
+  s.setLen(s.len-n)
 
 proc exchange[T](d: var seq[T], pos1, pos2: Natural) {.inline.} =
   swap(d[pos1], d[pos2])
@@ -88,6 +98,43 @@ proc day16PermutationPromenadeB*(input: string, length: Natural = 16): string =
 
   d.join()
 
+# from https://stackoverflow.com/questions/36577570/how-to-benchmark-few-lines-of-code-in-nim
+template benchmark(benchmarkName: string, code: untyped) =
+  let t0 = epochTime()
+  code
+  let elapsed = epochTime() - t0
+  let elapsedStr = elapsed.formatFloat(format = ffDecimal, precision = 3)
+  echo "CPU Time [", benchmarkName, "] ", elapsedStr, "s"
+
+# Results:
+# CPU Time [spin] 0.679s
+# CPU Time [spin2] 1.417s
+# CPU Time [spin3] 1.235s
+# CPU Time [spin4] 1.153s
+# CPU Time [spinInline] 0.653s
+proc benchmarks =
+  proc benchDancers(testproc: proc(s: var seq[char]; n: Natural), name: string = "bench") =
+    var d = initDancers()
+    testproc(d, 2)
+    assert d[0] == 'o'
+    assert d[1] == 'p'
+    assert d[15] == 'n'
+
+    benchmark name:
+      for i in 0..<1_000_000:
+        testproc(d, 3)
+
+  benchDancers(spin, "spin")
+  benchDancers(spin2, "spin2")
+  benchDancers(spin3, "spin3")
+  benchDancers(spin4, "spin4")
+
+  var d = initDancers()
+  spinInline(d, 2)
+  benchmark "spinInline":
+    for i in 0..<1_000_000:
+      spinInline(d, 3)
+
 when isMainModule:
   let firstDancers = initDancers()
   var d = firstDancers
@@ -122,3 +169,5 @@ when isMainModule:
   assert firstDancers != d
 
   echo "all asserts passed"
+
+  benchmarks()
