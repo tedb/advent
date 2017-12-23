@@ -6,6 +6,7 @@ import adventpkg/day3
 import adventpkg/day4
 import adventpkg/day5
 import adventpkg/day7
+import adventpkg/day12
 import adventpkg/day16
 
 proc dispatch*(day: string, input: string): string =
@@ -39,6 +40,10 @@ proc dispatch*(day: string, input: string): string =
     return day7.day7RecursiveCircusA(input)
   of "7b":
     return day7.day7RecursiveCircusB(input)
+  of "12a":
+    return day12.day12DigitalPlumberA(input)
+  of "12b":
+    return day12.day12DigitalPlumberB(input)
   of "16a":
     return day16.day16PermutationPromenadeA(input)
   of "16b":
