@@ -137,4 +137,4 @@ suite "day24":
   test "day24a":
     check day24ElectromagneticMoatA(input) == "31"
   test "day24b":
-    check day24ElectromagneticMoatB(input) == "z"
+    check day24ElectromagneticMoatB(input) == "19"

@@ -19,6 +19,8 @@ proc max[T](input: seq[T]): T =
       result = x
 
 proc bridgeStrength(parts: seq[Part]): int =
+  if parts.len == 0:
+    return 0
   parts.map((p) => p.a + p.b).foldl(a + b)
 
 proc formatBridge(parts: seq[Part]): string =
@@ -46,13 +48,30 @@ proc maxChild(parts: seq[Part], rightPort: int = 0, parents: seq[Part] = @[]): i
     if thisStrength > result:
       result = thisStrength
 
+proc maxLength(parts: seq[Part], longestBridge: var seq[Part], rightPort: int = 0, parents: seq[Part] = @[]) =
+  var children: seq[Part] = parts.filter((p) => (p.a == rightPort or p.b == rightPort) and not parents.contains(p))
+
+  if children.len == 0:
+    if len(parents) >= len(longestBridge) and parents.bridgeStrength > longestBridge.bridgeStrength:
+      longestBridge = parents
+
+  for c in children:
+    var otherPort = if c.a == rightPort: c.b
+      else: c.a
+
+    parts.maxLength(longestBridge, otherPort, parents & c)
+
 proc day24ElectromagneticMoatA*(input: string): string =
   let parts: seq[Part] = input.splitLines.map((line) => line.split("/").map((port) => port.parseInt).xySort)
 
   return $ parts.maxChild()
 
 proc day24ElectromagneticMoatB*(input: string): string =
-  ""
+  let parts: seq[Part] = input.splitLines.map((line) => line.split("/").map((port) => port.parseInt).xySort)
+  var longestBridge: seq[Part] = @[]
+  parts.maxLength(longestBridge)
+  echo longestBridge.formatBridge
+  return $longestBridge.bridgeStrength
 
 when isMainModule:
   assert bridgeStrength(@[(1, 2), (2, 3)]) == 8
