@@ -21,10 +21,18 @@ proc max[T](input: seq[T]): T =
 proc bridgeStrength(parts: seq[Part]): int =
   parts.map((p) => p.a + p.b).foldl(a + b)
 
-proc maxChild(parts: seq[Part], used: var HashSet[Part], rightPort: int = 0): int =
-  let usedCopy = used
-  var children: seq[Part] = parts.filter((p) => not usedCopy.contains(p) and (p.a == rightPort or p.b == rightPort))
-  echo "children for $#: $#".format(rightPort, children)
+proc formatBridge(parts: seq[Part]): string =
+  parts.map((p) => "$#/$#".format(p.a, p.b)).join(" ")
+
+proc pad(parts: seq[Part]): string =
+  result = ""
+  for p in parts:
+    result &= " "
+
+proc maxChild(parts: seq[Part], rightPort: int = 0, parents: seq[Part] = @[]): int =
+  var children: seq[Part] = parts.filter((p) => (p.a == rightPort or p.b == rightPort) and not parents.contains(p))
+
+  #echo "$#children for $# ($#): $#".format(pad(parents), rightPort, formatBridge(parents), children)
 
   if children.len == 0:
     return 0
@@ -33,18 +41,15 @@ proc maxChild(parts: seq[Part], used: var HashSet[Part], rightPort: int = 0): in
     var otherPort = if c.a == rightPort: c.b
       else: c.a
 
-    used.incl xySort(@[rightPort, otherPort])
-
-    var thisChild = rightPort + otherPort + parts.maxChild(used, otherPort)
-    echo "thisChild ($# $#) = $#".format(rightPort, otherPort, thisChild)
-    if thisChild > result:
-      result = thisChild
+    var thisStrength = rightPort + otherPort + parts.maxChild(otherPort, parents & c)
+    #echo "$#thisStrength ($# $#) = $#".format(pad(parents), rightPort, otherPort, thisStrength)
+    if thisStrength > result:
+      result = thisStrength
 
 proc day24ElectromagneticMoatA*(input: string): string =
   let parts: seq[Part] = input.splitLines.map((line) => line.split("/").map((port) => port.parseInt).xySort)
-  var used = initSet[Part](nextPowerOfTwo(parts.len))
 
-  return $ parts.maxChild(used)
+  return $ parts.maxChild()
 
 proc day24ElectromagneticMoatB*(input: string): string =
   ""
@@ -59,3 +64,7 @@ when isMainModule:
   assert max(@[1]) == 1
   assert max(@[3, 1, 2]) == 3
   assert max(@[1, 2, 3]) == 3
+
+  assert pad(@[]) == ""
+  assert pad(@[(1,2)]) == " "
+  assert pad(@[(1, 2), (2, 3)]) == "  "
