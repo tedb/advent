@@ -8,6 +8,7 @@ import adventpkg/day5
 import adventpkg/day7
 import adventpkg/day12
 import adventpkg/day16
+import adventpkg/day24
 
 proc dispatch*(day: string, input: string): string =
   if day.allCharsInSet(Digits):
@@ -17,37 +18,41 @@ proc dispatch*(day: string, input: string): string =
 
   case day
   of "1a":
-    return day1.day1InverseCaptchaA(input)
+    return day1InverseCaptchaA(input)
   of "1b":
-    return day1.day1InverseCaptchaB(input)
+    return day1InverseCaptchaB(input)
   of "2a":
-    return day2.day2CorruptionChecksumA(input)
+    return day2CorruptionChecksumA(input)
   of "2b":
-    return day2.day2CorruptionChecksumB(input)
+    return day2CorruptionChecksumB(input)
   of "3a":
-    return day3.day3SpiralMemoryA(input)
+    return day3SpiralMemoryA(input)
   of "3b":
-    return day3.day3SpiralMemoryB(input)
+    return day3SpiralMemoryB(input)
   of "4a":
-    return day4.day4HighEntropyPassphrasesA(input)
+    return day4HighEntropyPassphrasesA(input)
   of "4b":
-    return day4.day4HighEntropyPassphrasesB(input)
+    return day4HighEntropyPassphrasesB(input)
   of "5a":
-    return day5.day5MazeTwistyTrampolinesA(input)
+    return day5MazeTwistyTrampolinesA(input)
   of "5b":
-    return day5.day5MazeTwistyTrampolinesB(input)
+    return day5MazeTwistyTrampolinesB(input)
   of "7a":
-    return day7.day7RecursiveCircusA(input)
+    return day7RecursiveCircusA(input)
   of "7b":
-    return day7.day7RecursiveCircusB(input)
+    return day7RecursiveCircusB(input)
   of "12a":
-    return day12.day12DigitalPlumberA(input)
+    return day12DigitalPlumberA(input)
   of "12b":
-    return day12.day12DigitalPlumberB(input)
+    return day12DigitalPlumberB(input)
   of "16a":
-    return day16.day16PermutationPromenadeA(input)
+    return day16PermutationPromenadeA(input)
   of "16b":
-    return day16.day16PermutationPromenadeB(input)
+    return day16PermutationPromenadeB(input)
+  of "24a":
+    return day24ElectromagneticMoatA(input)
+  of "24b":
+    return day24ElectromagneticMoatB(input)
   else:
     quit("Day " & day & " is not implemented")
 

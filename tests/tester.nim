@@ -8,6 +8,7 @@ import ../adventpkg/day5
 import ../adventpkg/day7
 import ../adventpkg/day12
 import ../adventpkg/day16
+import ../adventpkg/day24
 
 suite "day1a":
   test "1122":
@@ -122,3 +123,18 @@ suite "day16":
     check day16PermutationPromenadeA(input, 5) == "baedc"
   test "day16b":
     check day16PermutationPromenadeB(input, 5) == "ceadb"
+
+suite "day24":
+  var input = """0/2
+2/2
+2/3
+3/4
+3/5
+0/1
+10/1
+9/10"""
+
+  test "day24a":
+    check day24ElectromagneticMoatA(input) == "31"
+  test "day24b":
+    check day24ElectromagneticMoatB(input) == "z"
