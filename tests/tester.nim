@@ -7,6 +7,7 @@ import ../adventpkg/day4
 import ../adventpkg/day5
 import ../adventpkg/day7
 import ../adventpkg/day12
+import ../adventpkg/day15
 import ../adventpkg/day16
 import ../adventpkg/day24
 
@@ -116,6 +117,14 @@ suite "day12":
     check day12DigitalPlumberA(input) == "6"
   test "day12b":
     check day12DigitalPlumberB(input) == "6"
+
+suite "day15":
+  var input = """Generator A starts with 65
+  Generator B starts with 8921"""
+  test "day15a":
+    check day15DuelingGeneratorsA(input) == "588"
+  test "day16b":
+    check day15DuelingGeneratorsB(input) == "309"
 
 suite "day16":
   var input = "s1,x3/4,pe/b"
