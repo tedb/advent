@@ -116,7 +116,7 @@ suite "day12":
   test "day12a":
     check day12DigitalPlumberA(input) == "6"
   test "day12b":
-    check day12DigitalPlumberB(input) == "6"
+    check day12DigitalPlumberB(input) == "2"
 
 suite "day15":
   var input = """Generator A starts with 65

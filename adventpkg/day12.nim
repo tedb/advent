@@ -24,14 +24,18 @@ proc countNodes(t: NodeTable, label: int = 0, found: var seq[int]): int =
 
 proc day12DigitalPlumberA*(input: string): string =
   var table = newTableFromInput(input)
-  # for k, v in table:
-  #   echo k, " ", v
 
   var found: seq[int] = @[]
   $ table.countNodes(0, found)
 
 proc day12DigitalPlumberB*(input: string): string =
-  ""
+  var table = newTableFromInput(input)
+  var found: seq[int] = @[]
+  var groupCount: int
 
-when isMainModule:
-  discard
+  for key, _ in table:
+    if not found.contains(key):
+      inc groupCount
+      discard table.countNodes(key, found)
+
+  $ groupCount
