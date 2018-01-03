@@ -160,7 +160,7 @@ suite "day19":
   test "day19a":
     check day19ASeriesofTubesA(input) == "ABCDEF"
   test "day19b":
-    check day19ASeriesofTubesB(input) == "z"
+    check day19ASeriesofTubesB(input) == "38"
 
 suite "day22":
   var input = "..#\n#..\n..."

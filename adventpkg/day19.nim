@@ -36,23 +36,29 @@ proc get(lines: seq[string], y, x: int): char =
     else:
       lines[y][x]
 
-proc day19ASeriesofTubesA*(input: string): string =
-  result = ""
-  let lines = input.splitLines
+proc followPath(lines: seq[string]): tuple[chars: string, steps: int] =
+  result.chars = ""
   var pos = Pos((lines[0].find('|'), 0))
   var current = lines[pos.y][pos.x]
   var facing = fDown
 
   while current != ' ':
+    inc result.steps
+
     if current in ('A'..'Z'):
-      result &= current
+      result.chars &= current
     facing = current.nextMove(lines.get(pos.y-1, pos.x), lines.get(pos.y, pos.x+1), lines.get(pos.y+1, pos.x), lines.get(pos.y, pos.x-1), facing)
     pos.forward(facing)
 
     current = lines.get(pos.y, pos.x)
 
+proc day19ASeriesofTubesA*(input: string): string =
+  let lines = input.splitLines
+  $ lines.followPath.chars
+
 proc day19ASeriesofTubesB*(input: string): string =
-  ""
+  let lines = input.splitLines
+  $ lines.followPath.steps
 
 when isMainModule:
   assert nextMove('|', ' ', ' ', '|', ' ', fDown) == fDown
