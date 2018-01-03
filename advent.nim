@@ -5,14 +5,26 @@ import adventpkg/day2
 import adventpkg/day3
 import adventpkg/day4
 import adventpkg/day5
+import adventpkg/day6
 import adventpkg/day7
+import adventpkg/day8
 import adventpkg/day9
+import adventpkg/day10
+import adventpkg/day11
 import adventpkg/day12
+import adventpkg/day13
+import adventpkg/day14
 import adventpkg/day15
 import adventpkg/day16
 import adventpkg/day17
+import adventpkg/day18
+import adventpkg/day19
+import adventpkg/day20
+import adventpkg/day21
 import adventpkg/day22
+import adventpkg/day23
 import adventpkg/day24
+import adventpkg/day25
 
 proc dispatch*(day: string, input: string): string =
   if day.allCharsInSet(Digits):

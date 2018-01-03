@@ -70,7 +70,6 @@ proc day24ElectromagneticMoatB*(input: string): string =
   let parts: seq[Part] = input.splitLines.map((line) => line.split("/").map((port) => port.parseInt).xySort)
   var longestBridge: seq[Part] = @[]
   parts.maxLength(longestBridge)
-  echo longestBridge.formatBridge
   return $longestBridge.bridgeStrength
 
 when isMainModule:
