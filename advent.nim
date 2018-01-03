@@ -77,6 +77,10 @@ proc dispatch*(day: string, input: string): string =
     return day17SpinlockA(input)
   of "17b":
     return day17SpinlockB(input)
+  of "19a":
+    return day19ASeriesofTubesA(input)
+  of "19b":
+    return day19ASeriesofTubesB(input)
   of "22a":
     return day22SporificaVirusA(input)
   of "22b":

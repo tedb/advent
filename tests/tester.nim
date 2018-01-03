@@ -150,6 +150,18 @@ suite "day16":
   test "day16b":
     check day16PermutationPromenadeB(input, 5) == "ceadb"
 
+suite "day19":
+  var input = """     |
+     |  +--+
+     A  |  C
+ F---|----E|--+
+     |  |  |  D
+     +B-+  +--+ """
+  test "day19a":
+    check day19ASeriesofTubesA(input) == "ABCDEF"
+  test "day19b":
+    check day19ASeriesofTubesB(input) == "z"
+
 suite "day22":
   var input = "..#\n#..\n..."
   test "day22a":
@@ -158,7 +170,8 @@ suite "day22":
     check day22SporificaVirusA(input, 10000) == "5587"
   test "day22b":
     check day22SporificaVirusB(input, 100) == "26"
-    check day22SporificaVirusB(input, 10000000) == "2511944"
+    # leaving off for speed
+    #check day22SporificaVirusB(input, 10000000) == "2511944"
 
 suite "day24":
   var input = """0/2
