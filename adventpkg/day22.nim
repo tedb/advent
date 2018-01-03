@@ -50,6 +50,8 @@ proc traverseGrid(grid: var HashSet[Node], thisNode: Node, bursts: int, directio
   let isInfected: bool = grid.contains(thisNode)
   let newDirection = direction.turn(isInfected)
 
+  #echo "pos: $#, infected: $#, newDirection: $#".format(thisNode, isInfected, newDirection)
+
   var causedInfection: int
   if not isInfected:
     grid.incl thisNode
@@ -57,7 +59,7 @@ proc traverseGrid(grid: var HashSet[Node], thisNode: Node, bursts: int, directio
   else:
     grid.excl thisNode
 
-  return causedInfection + traverseGrid(grid, thisNode.forward(direction), bursts-1, newDirection)
+  return causedInfection + traverseGrid(grid, thisNode.forward(newDirection), bursts-1, newDirection)
 
 when isMainModule:
   var sample = "..#\n#..\n..."
@@ -83,7 +85,9 @@ when isMainModule:
   assert node.forward(fDown) == Node((1, 2))
   assert node.forward(fLeft) == Node((0, 1))
 
+  grid = mapToInfectedGrid((sample))
   assert grid.traverseGrid(pos, 7) == 5
-  echo grid.traverseGrid(pos, 70)
+  grid = mapToInfectedGrid((sample))
   assert grid.traverseGrid(pos, 70) == 41
+  grid = mapToInfectedGrid((sample))
   assert grid.traverseGrid(pos, 10000) == 5587
