@@ -1,8 +1,9 @@
-import sequtils, sets, strutils, math
+import sequtils, sets, strutils, math, tables
 
 type
   Node = tuple[x, y: int]
   Facing = enum fUp, fRight, fDown, fLeft
+  NodeState = enum nsWeakened, nsInfected, nsFlagged
 
 proc mapToInfectedGrid(input: string): HashSet[Node] =
   result = initSet[Node](input.len.nextPowerOfTwo)
@@ -28,6 +29,17 @@ proc turn(f: Facing, infected: bool): Facing =
     else:
       if f == fUp: fLeft
         else: Facing(int(f) - 1)
+
+proc reverse(f: Facing): Facing =
+  return case f
+  of fUp:
+    fDown
+  of fRight:
+    fLeft
+  of fDown:
+    fUp
+  of fLeft:
+    fRight
 
 proc forward(n: var Node, f: Facing) =
   case f
@@ -64,11 +76,44 @@ proc traverseGrid(grid: HashSet[Node], node: Node, bursts: int, direction: Facin
     node.forward(direction)
     dec bursts
 
+proc traverseGridWeaken(infected: HashSet[Node], node: Node, bursts: int, direction: Facing = fUp): int =
+  var node = node
+  var bursts = bursts
+  var direction = direction
+
+  # States holds non-clean node states; absent nodes are "clean"
+  var states = initTable[Node, NodeState]()
+  for n in infected:
+    states[n] = nsInfected
+
+  while bursts > 0:
+    if not states.hasKey(node):
+      # node is clean
+      direction = direction.turn(false)
+      states[node] = nsWeakened
+    else:
+      case states[node]
+      of nsWeakened:
+        # no direction change
+        states[node] = nsInfected
+        inc result
+      of nsInfected:
+        direction = direction.turn(true)
+        states[node] = nsFlagged
+      of nsFlagged:
+        direction = direction.reverse()
+        states.del(node)
+
+    #echo "pos: $#, infected: $#, direction: $#".format(node, isInfected, direction)
+
+    node.forward(direction)
+    dec bursts
+
 proc day22SporificaVirusA*(input: string, bursts: int = 10000): string =
   $ mapToInfectedGrid(input).traverseGrid(mapInitialPosition(input), bursts)
 
-proc day22SporificaVirusB*(input: string): string =
-  ""
+proc day22SporificaVirusB*(input: string, bursts: int = 10000000): string =
+  $ mapToInfectedGrid(input).traverseGridWeaken(mapInitialPosition(input), bursts)
 
 when isMainModule:
   var sample = "..#\n#..\n..."

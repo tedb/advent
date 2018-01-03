@@ -143,7 +143,8 @@ suite "day22":
     check day22SporificaVirusA(input, 70) == "41"
     check day22SporificaVirusA(input, 10000) == "5587"
   test "day22b":
-    discard
+    check day22SporificaVirusB(input, 100) == "26"
+    check day22SporificaVirusB(input, 10000000) == "2511944"
 
 suite "day24":
   var input = """0/2
