@@ -29,41 +29,50 @@ proc turn(f: Facing, infected: bool): Facing =
       if f == fUp: fLeft
         else: Facing(int(f) - 1)
 
-proc forward(n: Node, f: Facing): Node =
-  result = n
+proc forward(n: var Node, f: Facing) =
   case f
   of fUp:
-    dec result.y
+    dec n.y
   of fRight:
-    inc result.x
+    inc n.x
   of fDown:
-    inc result.y
+    inc n.y
   of fLeft:
-    dec result.x
+    dec n.x
 
 # traverse the grid, starting at the given node, for the given number of activity bursts
 # return number of bursts that caused an infection
-proc traverseGrid(grid: var HashSet[Node], thisNode: Node, bursts: int, direction: Facing = fUp): int =
-  if bursts == 0:
-    return 0
+proc traverseGrid(grid: HashSet[Node], node: Node, bursts: int, direction: Facing = fUp): int =
+  # shadow all the arg variables
+  var grid = grid
+  var node = node
+  var bursts = bursts
+  var direction = direction
 
-  let isInfected: bool = grid.contains(thisNode)
-  let newDirection = direction.turn(isInfected)
+  while bursts > 0:
+    var isInfected = grid.contains(node)
 
-  #echo "pos: $#, infected: $#, newDirection: $#".format(thisNode, isInfected, newDirection)
+    #echo "pos: $#, infected: $#, direction: $#".format(node, isInfected, direction)
 
-  var causedInfection: int
-  if not isInfected:
-    grid.incl thisNode
-    inc causedInfection
-  else:
-    grid.excl thisNode
+    direction = direction.turn(isInfected)
+    if not isInfected:
+      grid.incl node
+      inc result
+    else:
+      grid.excl node
 
-  return causedInfection + traverseGrid(grid, thisNode.forward(newDirection), bursts-1, newDirection)
+    node.forward(direction)
+    dec bursts
+
+proc day22SporificaVirusA*(input: string, bursts: int = 10000): string =
+  $ mapToInfectedGrid(input).traverseGrid(mapInitialPosition(input), bursts)
+
+proc day22SporificaVirusB*(input: string): string =
+  ""
 
 when isMainModule:
   var sample = "..#\n#..\n..."
-  var grid = mapToInfectedGrid((sample))
+  var grid = mapToInfectedGrid(sample)
   assert grid.len == 2
   assert grid.contains((2, 0))
   assert grid.contains((0, 1))
@@ -72,22 +81,19 @@ when isMainModule:
   assert pos.x == 1
   assert pos.y == 1
 
-  var f: Facing = fUp
-  assert f.turn(true) == fRight
-  f = fLeft
-  assert f.turn(true) == fUp
-  f = fUp
-  assert f.turn(false) == fLeft
+  assert fUp.turn(true) == fRight
+  assert fLeft.turn(true) == fUp
+  assert fUp.turn(false) == fLeft
 
   var node: Node = (1, 1)
-  assert node.forward(fUp) == Node((1, 0))
-  assert node.forward(fRight) == Node((2, 1))
-  assert node.forward(fDown) == Node((1, 2))
-  assert node.forward(fLeft) == Node((0, 1))
-
-  grid = mapToInfectedGrid((sample))
-  assert grid.traverseGrid(pos, 7) == 5
-  grid = mapToInfectedGrid((sample))
-  assert grid.traverseGrid(pos, 70) == 41
-  grid = mapToInfectedGrid((sample))
-  assert grid.traverseGrid(pos, 10000) == 5587
+  node.forward(fUp)
+  assert node == Node((1, 0))
+  node = (1, 1)
+  node.forward(fRight)
+  assert node == Node((2, 1))
+  node = (1, 1)
+  node.forward(fDown)
+  assert node == Node((1, 2))
+  node = (1, 1)
+  node.forward(fLeft)
+  assert node == Node((0, 1))

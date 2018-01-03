@@ -9,6 +9,7 @@ import ../adventpkg/day7
 import ../adventpkg/day12
 import ../adventpkg/day15
 import ../adventpkg/day16
+import ../adventpkg/day22
 import ../adventpkg/day24
 
 suite "day1a":
@@ -124,7 +125,9 @@ suite "day15":
   test "day15a":
     check day15DuelingGeneratorsA(input) == "588"
   test "day16b":
-    check day15DuelingGeneratorsB(input) == "309"
+    # skipping for speed of tests
+    #check day15DuelingGeneratorsB(input) == "309"
+    discard
 
 suite "day16":
   var input = "s1,x3/4,pe/b"
@@ -132,6 +135,15 @@ suite "day16":
     check day16PermutationPromenadeA(input, 5) == "baedc"
   test "day16b":
     check day16PermutationPromenadeB(input, 5) == "ceadb"
+
+suite "day22":
+  var input = "..#\n#..\n..."
+  test "day22a":
+    check day22SporificaVirusA(input, 7) == "5"
+    check day22SporificaVirusA(input, 70) == "41"
+    check day22SporificaVirusA(input, 10000) == "5587"
+  test "day22b":
+    discard
 
 suite "day24":
   var input = """0/2

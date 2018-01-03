@@ -11,6 +11,7 @@ import adventpkg/day12
 import adventpkg/day15
 import adventpkg/day16
 import adventpkg/day17
+import adventpkg/day22
 import adventpkg/day24
 
 proc dispatch*(day: string, input: string): string =
@@ -64,6 +65,10 @@ proc dispatch*(day: string, input: string): string =
     return day17SpinlockA(input)
   of "17b":
     return day17SpinlockB(input)
+  of "22a":
+    return day22SporificaVirusA(input)
+  of "22b":
+    return day22SporificaVirusB(input)
   of "24a":
     return day24ElectromagneticMoatA(input)
   of "24b":
