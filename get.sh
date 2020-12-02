@@ -1,6 +1,7 @@
 #!/usr/local/bin/fish
 
-set cookie "session=53616c7465645f5fda690118b76c47ec72c69a318919bb74ed2111a7c32d0bdb58259c4d827b44e7c0bb234f1e92fe2f"
+# File contents: session=abcd
+set cookie $(cat .cookie)
 
 for day in (seq 1 (date +%d))
   echo $day
