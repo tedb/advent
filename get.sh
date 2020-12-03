@@ -1,11 +1,12 @@
-#!/usr/local/bin/fish
+#!/usr/bin/fish
 
 # File contents: session=abcd
-set cookie $(cat .cookie)
+set cookie (cat .cookie)
+set year 2020
 
 for day in (seq 1 (date +%d))
   echo $day
-  set f ~/code/aoc2019/day$day/input
+  set f ./day$day/input
   if test -e $f; continue; end
-  curl -o "$f" --cookie "$cookie" https://adventofcode.com/2019/day/$day/input
+  curl -o "$f" --cookie "$cookie" https://adventofcode.com/$year/day/$day/input
 end
