@@ -11,3 +11,6 @@ day2: get
 
 day3: get
 	nim compile --run --verbosity:0 day3/day3.nim
+
+day4: get
+	ruby day4/day4.rb
