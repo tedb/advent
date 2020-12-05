@@ -1,4 +1,4 @@
-.PHONY: get day1 day2
+.PHONY: get day1 day2 day3 day4 day5
 
 get:
 	./get.sh
@@ -14,3 +14,6 @@ day3: get
 
 day4: get
 	ruby day4/day4.rb
+
+day5: get
+	ruby day5/day5.rb
