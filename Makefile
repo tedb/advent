@@ -18,6 +18,8 @@ day4: get
 day5: get
 	ruby day5/day5.rb
 
+day7: get
+	ruby day7/day7.rb day7/input
+
 day8: get
 	ruby day8/day8.rb day8/input
-	
