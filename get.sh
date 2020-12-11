@@ -1,4 +1,4 @@
-#!/usr/bin/fish
+#!/usr/bin/env fish
 
 # File contents: session=abcd
 set cookie (cat .cookie)
