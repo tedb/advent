@@ -23,3 +23,9 @@ day7: get
 
 day8: get
 	ruby day8/day8.rb day8/input
+
+day11: get
+	nim compile --run --verbosity:0 day11/day11.nim
+
+day13: get
+	ruby day13/day13.rb < day13/input
