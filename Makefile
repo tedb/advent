@@ -29,3 +29,7 @@ day11: get
 
 day13: get
 	ruby day13/day13.rb < day13/input
+
+day22: get
+	# input file is not read for day 22
+	ruby day22/day22.rb
