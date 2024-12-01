@@ -4,7 +4,7 @@ get:
 	./get.sh
 
 day1: get
-	
+	ruby day1/day1.rb
 
 day2: get
 	
