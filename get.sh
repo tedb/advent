@@ -2,7 +2,7 @@
 
 # File contents: session=abcd
 set cookie (cat .cookie)
-set year 2020
+set year 2024
 
 for day in (seq 1 (date +%d))
   echo $day
