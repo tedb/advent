@@ -7,10 +7,10 @@ day1: get
 	ruby day1/day1.rb day1/input
 
 day2: get
-	
+	ruby day2/day2.rb day2/input
 
 day3: get
-	
+	ruby day3/day3.rb day3/input
 
 day4: get
 	
