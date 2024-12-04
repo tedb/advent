@@ -13,7 +13,7 @@ day3: get
 	ruby day3/day3.rb day3/input
 
 day4: get
-	
+	ruby day4/day4.rb day4/input
 
 day5: get
 	
