@@ -32,3 +32,14 @@ re = {
 }
 
 puts re.sum{|k, v| puts k, v, data.scan(v).inspect, ""; data.scan(v).length}
+
+puts "part 2"
+
+re2 = {
+    downup: /(?=M.S.{#{w-1}}A.{#{w-1}}M.S)/m,
+    downdown: /(?=M.M.{#{w-1}}A.{#{w-1}}S.S)/m,
+    updown: /(?=S.M.{#{w-1}}A.{#{w-1}}S.M)/m,
+    upup: /(?=S.S.{#{w-1}}A.{#{w-1}}M.M)/m,
+}
+
+puts re2.sum{|k, v| puts k, v, data.scan(v).inspect, ""; data.scan(v).length}
