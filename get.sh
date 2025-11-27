@@ -2,7 +2,7 @@
 
 # File contents: session=abcd
 set cookie (cat .cookie)
-set year 2024
+set year (git branch --show-current)
 
 for day in (seq 1 (date +%d))
   echo $day
