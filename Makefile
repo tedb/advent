@@ -1,34 +1,27 @@
-.PHONY: get day1 day2 day3 day4 day5
+# List days you want to support
+DAYS := $(shell seq 1 25)
+DAY_INPUTS := $(foreach d,$(DAYS),day$(d)/input)
 
+.PHONY: get
 get:
-	./get.sh
+	@missing=0; \
+	for f in $(DAY_INPUTS); do \
+		if [ ! -f $$f ]; then \
+			echo "Missing: $$f"; \
+			missing=1; \
+		fi; \
+	done; \
+	if [ $$missing -eq 1 ]; then \
+		echo "Running get.sh because some inputs are missing..."; \
+		./get.sh; \
+	else \
+		echo "All input files already exist. Skipping get."; \
+	fi
+
+# Generic rule: each day depends on the inputs being present
+day%: get
+	@echo "Running day$* (no custom command defined)"
 
 day1: get
-	ruby day1/day1.rb day1/input
+	sqlite3 < day1/day1.sql
 
-day2: get
-	ruby day2/day2.rb day2/input
-
-day3: get
-	ruby day3/day3.rb day3/input
-
-day4: get
-	ruby day4/day4.rb day4/input
-
-day5: get
-	
-
-day7: get
-	
-
-day8: get
-	
-
-day11: get
-	
-
-day13: get
-	
-
-day22: get
-	
