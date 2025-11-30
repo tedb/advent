@@ -25,3 +25,6 @@ day%: get
 day1: get
 	sqlite3 < day1/day1.sql
 
+day2: get
+	sqlite3 < day2/day2.sql
+
