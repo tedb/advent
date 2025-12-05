@@ -1,5 +1,5 @@
 # List days you want to support
-DAYS := $(shell seq 1 25)
+DAYS := $(shell seq 1 12)
 DAY_INPUTS := $(foreach d,$(DAYS),day$(d)/input)
 
 .PHONY: get
